@@ -90,6 +90,20 @@ class _HomePageState extends State<HomePage> {
                           ),
 
                       Table(
+                        columnWidths: <int,TableColumnWidth>{
+
+                          0:FixedColumnWidth(30),
+                          1:FixedColumnWidth(30),
+                          2:FixedColumnWidth(30)
+
+                        },
+                        children: [
+
+
+
+
+                        ],
+
 
 
 
