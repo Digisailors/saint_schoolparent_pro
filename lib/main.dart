@@ -1,4 +1,11 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
+import 'package:saint_schoolparent_pro/screens/homepage.dart';
+import 'package:saint_schoolparent_pro/screens/ic_verification_page.dart';
+import 'package:saint_schoolparent_pro/screens/splashscreen.dart';
+import 'package:saint_schoolparent_pro/theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,9 +17,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
+        colorScheme: lightColorScheme,
+        textTheme: MyTexTheme,
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -24,7 +33,12 @@ class MyApp extends StatelessWidget {
         // is not restarted.
          primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: AnimatedSplashScreen(
+        splashIconSize: 250,
+
+        nextScreen: HomePage(), splash: Image.asset('assets/logo.png',height: 300,) ,
+
+      )
     );
   }
 }
