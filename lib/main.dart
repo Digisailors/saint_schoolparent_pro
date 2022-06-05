@@ -4,6 +4,8 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
 import 'package:saint_schoolparent_pro/screens/homepage.dart';
 import 'package:saint_schoolparent_pro/screens/ic_verification_page.dart';
+import 'package:saint_schoolparent_pro/screens/loginpage.dart';
+import 'package:saint_schoolparent_pro/screens/registrationpage.dart';
 import 'package:saint_schoolparent_pro/screens/splashscreen.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 
@@ -33,12 +35,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
          primarySwatch: Colors.blue,
       ),
-      home: AnimatedSplashScreen(
-        splashIconSize: 250,
-
-        nextScreen: HomePage(), splash: Image.asset('assets/logo.png',height: 300,) ,
-
-      )
+      home: RegistrationPage()
+      // AnimatedSplashScreen(
+      //   splashIconSize: 250,
+      //
+      //   nextScreen: , splash: Image.asset('assets/logo.png',height: 300,) ,
+      //
+      // )
     );
   }
 }
