@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
             ),
-            child: SizedBox(height: getHeight(context)*0.30,width: getWidth(context)*0.95,
+            child: SizedBox(height: getHeight(context)*0.285,width: getWidth(context)*0.95,
 
             child: Row(
 
@@ -67,6 +67,8 @@ class _HomePageState extends State<HomePage> {
                     flex: 5,
                     child:Container(
                       child:Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
 
                         children: [
                           ListTile(
@@ -88,26 +90,188 @@ class _HomePageState extends State<HomePage> {
                             ),
 
                           ),
+                      Divider(),
 
-                      Table(
-                        columnWidths: <int,TableColumnWidth>{
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Table(
 
-                          0:FixedColumnWidth(30),
-                          1:FixedColumnWidth(30),
-                          2:FixedColumnWidth(30)
+                          columnWidths: <int,TableColumnWidth>{
 
-                        },
-                        children: [
+                            0:FixedColumnWidth(getWidth(context)*0.05),
+                            1:FixedColumnWidth(getWidth(context)*0.40),
+                            2:FixedColumnWidth(getWidth(context)*0.20)
+
+                          },
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+
+                              ),
+                              children: [
+
+
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Container(
+                                    width: 10,
+                                    height: 20,
+                                    decoration: BoxDecoration(
+                                      color: Colors.deepPurple,
+                                      borderRadius: BorderRadius.circular(30
+
+                                      ),
+                                    ),
+
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 12.0),
+                                  child: Text('Attendance'),
+                                ),
+                                Text('79'+'%')
+
+
+
+                              ]
+                            ),
+                            TableRow(
+                                decoration: BoxDecoration(
+
+                                ),
+                                children: [
+
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 12.0),
+                                    child: Container(
+                                      width: 10,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepPurple,
+                                        borderRadius: BorderRadius.circular(30
+
+                                        ),
+                                      ),
+
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 12.0),
+                                    child: Text('In Time'),
+                                  ),
+                                  Text('9:30 Am')
+
+
+
+                                ]
+                            ),
+                            TableRow(
+                                decoration: BoxDecoration(
+
+                                ),
+                                children: [
+
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 12.0),
+                                    child: Container(
+                                      width: 10,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepPurple,
+                                        borderRadius: BorderRadius.circular(30
+
+                                        ),
+                                      ),
+
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 12.0),
+                                    child: Text('Out Time'),
+                                  ),
+                                  Text('5:30 PM')
+
+
+
+                                ]
+                            ),
+                            TableRow(
+                                decoration: BoxDecoration(
+
+                                ),
+                                children: [
+
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 12.0),
+                                    child: Container(
+                                      width: 10,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepPurple,
+                                        borderRadius: BorderRadius.circular(30
+
+                                        ),
+                                      ),
+
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 12.0),
+                                    child: Text('Breakfast'),
+                                  ),
+                                  Text('Taken')
+
+
+
+                                ]
+                            ),
+                            TableRow(
+                                decoration: BoxDecoration(
+
+                                ),
+                                children: [
+
+
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 12.0),
+                                    child: Container(
+                                      width: 10,
+                                      height: 20,
+                                      decoration: BoxDecoration(
+                                        color: Colors.deepPurple,
+                                        borderRadius: BorderRadius.circular(30
+
+                                        ),
+                                      ),
+
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(left: 12.0),
+                                    child: Text('Lunch'),
+                                  ),
+                                  Text('Not Taken')
+
+
+
+                                ]
+                            ),
 
 
 
 
-                        ],
+
+
+                          ],
 
 
 
 
 
+                        ),
                       )
 
 
