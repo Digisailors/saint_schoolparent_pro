@@ -14,7 +14,18 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+
+        title: Text('Home'),
+        centerTitle: true,
+        leading: Icon(Icons.logout),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Icon(Icons.person_add),
+          )
+        ],
+      ),
 
       body: ListView.builder(
 

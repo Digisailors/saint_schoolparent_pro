@@ -37,6 +37,8 @@ dependencies:
   animated_splash_screen: ^1.2.0
   get: ^4.6.5
   google_fonts: ^3.0.1
+  syncfusion_flutter_datepicker: ^20.1.59
+  time_range: ^1.0.2
 
 dev_dependencies:
   flutter_test:

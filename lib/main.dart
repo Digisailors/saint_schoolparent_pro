@@ -1,12 +1,17 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:saint_schoolparent_pro/screens/alertpage.dart';
 import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
+import 'package:saint_schoolparent_pro/screens/appointmetpage.dart';
+import 'package:saint_schoolparent_pro/screens/bottomrouter.dart';
 import 'package:saint_schoolparent_pro/screens/homepage.dart';
 import 'package:saint_schoolparent_pro/screens/ic_verification_page.dart';
 import 'package:saint_schoolparent_pro/screens/loginpage.dart';
+import 'package:saint_schoolparent_pro/screens/profile.dart';
 import 'package:saint_schoolparent_pro/screens/registrationpage.dart';
 import 'package:saint_schoolparent_pro/screens/splashscreen.dart';
+import 'package:saint_schoolparent_pro/screens/studentverificationpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 
 void main() {
@@ -24,6 +29,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: lightColorScheme,
         textTheme: MyTexTheme,
+        tabBarTheme: TabBarTheme(
+          indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(width: 4.0,color: getColor(context).tertiary),
+
+          ),
+        ),
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -35,7 +46,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
          primarySwatch: Colors.blue,
       ),
-      home: RegistrationPage()
+      home:BottomRouter()
       // AnimatedSplashScreen(
       //   splashIconSize: 250,
       //

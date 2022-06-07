@@ -5,14 +5,14 @@ import 'package:saint_schoolparent_pro/screens/homepage.dart';
 import '../theme.dart';
 import 'ic_verification_page.dart';
 
-class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+class Studentverification extends StatefulWidget {
+  const Studentverification({Key? key}) : super(key: key);
 
   @override
-  State<RegistrationPage> createState() => _RegistrationPageState();
+  State<Studentverification> createState() => _StudentverificationState();
 }
 
-class _RegistrationPageState extends State<RegistrationPage> {
+class _StudentverificationState extends State<Studentverification> {
   bool Isvisible = true;
 
   final _formKey = GlobalKey<FormState>();
@@ -21,10 +21,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return Form(
       key: _formKey,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Registration'),
-          centerTitle: true,
-        ),
+          appBar: AppBar(
+            title: Text('Verification'),
+            centerTitle: true,
+          ),
           body: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,8 +33,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                 Padding(
                   padding: EdgeInsets.only(
-                      top: getHeight(context) * 0.01,
-                      ),
+                    top: getHeight(context) * 0.01,
+                  ),
                   child: Image.asset(
                     'assets/logo.png',
                     height: getHeight(context) * 0.20,
@@ -43,17 +43,23 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
 
                 Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text('Verify your child\'s IC NO',style: getText(context).headline6,),
+                ),
+
+
+                Padding(
                   padding: EdgeInsets.only(
                     top:getHeight(context) * 0.05,bottom: getWidth(context) * 0.02,
 
-                  left:  getWidth(context) * 0.02, right:  getWidth(context) * 0.02,
+                    left:  getWidth(context) * 0.02, right:  getWidth(context) * 0.02,
                   ) ,
 
 
                   child: CustomTextformField(
                     prefixIcon: Icon(Icons.person),
                     controller: TextEditingController(),
-                    hintText: 'Name',
+                    hintText: 'Parent IC NO',
                   ),
                 ),
                 Padding(
@@ -61,58 +67,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       horizontal: getWidth(context) * 0.02,
                       vertical: getHeight(context) * 0.02),
                   child: CustomTextformField(
-                    prefixIcon: Icon(Icons.email),
+                    prefixIcon: Icon(Icons.perm_contact_cal),
                     controller: TextEditingController(),
-                    hintText: 'Email',
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: getWidth(context) * 0.02,
-                      vertical: getHeight(context) * 0.02),
-                  child: CustomTextformField(
-                    prefixIcon: Icon(Icons.password),
-                    controller: TextEditingController(),
-                    hintText: 'Password',
-                    obscureText: Isvisible,
-                    suffixIcon: IconButton(
-                      icon: Isvisible? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off)
-                      ,
-                      onPressed: () {
-                        setState((){
-                          Isvisible=!Isvisible;
-
-                        });
-                      },
-                    ),
+                    hintText: 'Student IC NO',
                   ),
                 ),
 
-
-
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: getWidth(context) * 0.02,
-                      vertical: getHeight(context) * 0.01),
-                  child: CustomTextformField(
-                    prefixIcon: Icon(Icons.password),
-                    controller: TextEditingController(),
-                    hintText: 'Confirm Password',
-                    obscureText: Isvisible,
-                    suffixIcon: IconButton(
-                      icon: Isvisible? Icon(Icons.visibility)
-                          : Icon(Icons.visibility_off)
-                      ,
-                      onPressed: () {
-                        setState((){
-                          Isvisible=!Isvisible;
-
-                        });
-                      },
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: getHeight(context) * 0.10),
                   child: ElevatedButton(
@@ -139,7 +99,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         padding: EdgeInsets.symmetric(
                             horizontal: getWidth(context) * 0.15,
                             vertical: getHeight(context) * 0.02),
-                        child: Text('Submit'),
+                        child: Text('Verify'),
                       )),
                 )
               ],

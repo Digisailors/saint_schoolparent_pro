@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:saint_schoolparent_pro/theme.dart';
 
 class AppointmentList extends StatefulWidget {
   const AppointmentList({Key? key}) : super(key: key);
@@ -10,141 +11,191 @@ class AppointmentList extends StatefulWidget {
 class _AppointmentListState extends State<AppointmentList> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return DefaultTabController(
 
-      appBar: AppBar(
+      length: 2,
+      child: Scaffold(
 
-        bottom: PreferredSize(preferredSize: Size.fromHeight(50.0),child: // Generated code for this TextField Widget...
-        Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 8),
-    child: TextFormField(
+        appBar: AppBar(
+          title: const Text('Appointments'),
+          centerTitle: true,
 
-            onChanged: (_) {},
-            obscureText: false,
-            decoration: InputDecoration(
-              labelText: 'Search products...',
-              labelStyle: TextStyle(
-                fontFamily: 'Outfit',
-                color: Color(0xFF57636C),
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0x00000000),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Color(0x00000000),
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              filled: true,
-              fillColor: Colors.white,
-              prefixIcon: Icon(
-                Icons.search_rounded,
-                color: Color(0xFF57636C),
-              ),
+          bottom: const PreferredSize(preferredSize:Size.fromHeight(40) , child: TabBar(
+            tabs: [
+            Tab(
+              child: Text('Upcoming'),
             ),
-            style: TextStyle(
-              fontFamily: 'Outfit',
-              color: Color(0xFF14181B),
-              fontSize: 12,
-              fontWeight: FontWeight.normal,
+            Tab(
+              child: Text('Completed'),
             ),
-          ),
-        )
-          ,
+
+
+          ],),),
+
 
         ),
-      ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {  },
+          child: Icon(Icons.add),
+        ),
 
-      body: SingleChildScrollView(
-        child: Column(
+        body: TabBarView(
+
 
           children: [
-            // Generated code for this menuItem Widget...
-            Padding(
-              padding: EdgeInsetsDirectional.fromSTEB(16, 12, 16, 0),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 3,
-                      color: Color(0x411D2429),
-                      offset: Offset(0, 1),
-                    )
-                  ],
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8, 8, 8, 8),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Padding(
-                        padding: EdgeInsetsDirectional.fromSTEB(0, 1, 1, 1),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            'https://images.unsplash.com/photo-1574914629385-46448b767aec?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8bGF0dGV8ZW58MHx8MHx8&auto=format&fit=crop&w=800&q=60',
-                            width: 70,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsetsDirectional.fromSTEB(8, 0, 4, 0),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'How to pour Latte Art',
 
-                              ),
-                              Padding(
-                                padding: EdgeInsetsDirectional.fromSTEB(0, 4, 8, 0),
-                                child: Text(
-                                  'A wonderfully delicious 2 patty melt that melts into your...',
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto Mono',
-                                    color: Color(0xFF57636C),
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+               Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: ListView.builder(
+
+                     itemCount: 20,
+                     itemBuilder: (context,index){
+
+
+                   return  AppointmentTile();
+
+                 }),
+               ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+
+                  itemCount: 20,
+                  itemBuilder: (context,index){
+
+
+                    return  AppointmentTile();
+
+                  }),
+            ),
+
+
+
+          ],
+
+
+        ),
+
+
+      ),
+    );
+  }
+}
+
+class AppointmentTile extends StatelessWidget {
+  const AppointmentTile({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Card(
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        child:Column(
+
+          children: [
+            ListTile(
+              leading: CircleAvatar(
+                backgroundImage: AssetImage('assets/logo.png'
+                    ''),
+              ),
+              title: Text('Teacher Name'),
+              trailing: SizedBox(
+                width: getWidth(context)*0.3,
+                child: Row(
+                  children: [
+
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CircleAvatar(
+                        radius: 8,
+                        backgroundColor: Colors.greenAccent,
                       ),
+                    ),
+                    Text('Approved',style: getText(context).bodySmall,),
+                  ],
+                ),
+              ),
+              subtitle: Text('Science'),
+              
+            ),
+            
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+
+
+                color: Colors.white60,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+
+
+                      Image.network('https://cdn-icons-png.flaticon.com/512/2784/2784459.png',height: 32,),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text('9:30 AM-10:30 AM'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Image.network('https://cdn-icons-png.flaticon.com/512/3652/3652191.png',height: 32,),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0,right: 20),
+                        child: Text('Aug 15 2022'),
+                      )
+
+
 
                     ],
                   ),
                 ),
-              ),
-            )
 
+              ),
+            ),
+            ButtonBar(
+              alignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                
+                ElevatedButton(
+                    style: ButtonStyle(
+                        // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)
+                      ))
+                    ),
+                    onPressed: (){}, child: Padding(
+                      padding:  EdgeInsets.symmetric(horizontal: getWidth(context)*0.08),
+                      child: Text('Cancel',style: getText(context).bodySmall?.apply(color: Colors.white)),
+                    )),
+
+                ElevatedButton(
+                    style: ButtonStyle(
+                      // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)
+                        ))
+                    ),
+                    onPressed: (){}, child: Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: getWidth(context)*0.06 ),
+                  child: Text('reschedule',style: getText(context).bodySmall?.apply(color: Colors.white)),
+                )),
+              ],
+            ),
+            
           ],
+
         ),
 
-
-
-      ),
-
-
+      )
     );
   }
 }
