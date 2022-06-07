@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saint_schoolparent_pro/screens/bottomrouter.dart';
 import 'package:saint_schoolparent_pro/screens/homepage.dart';
 
 import '../theme.dart';
@@ -52,7 +53,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
                   child: CustomTextformField(
                     prefixIcon: Icon(Icons.person),
-                    controller: TextEditingController(),
+
                     hintText: 'Name',
                   ),
                 ),
@@ -62,7 +63,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       vertical: getHeight(context) * 0.02),
                   child: CustomTextformField(
                     prefixIcon: Icon(Icons.email),
-                    controller: TextEditingController(),
+
                     hintText: 'Email',
                   ),
                 ),
@@ -72,7 +73,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       vertical: getHeight(context) * 0.02),
                   child: CustomTextformField(
                     prefixIcon: Icon(Icons.password),
-                    controller: TextEditingController(),
+
                     hintText: 'Password',
                     obscureText: Isvisible,
                     suffixIcon: IconButton(
@@ -97,7 +98,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       vertical: getHeight(context) * 0.01),
                   child: CustomTextformField(
                     prefixIcon: Icon(Icons.password),
-                    controller: TextEditingController(),
+
                     hintText: 'Confirm Password',
                     obscureText: Isvisible,
                     suffixIcon: IconButton(
@@ -129,7 +130,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Registred Successfully')),
                           );
-                          Get.to(()=>HomePage());
+                          Get.to(()=>BottomRouter());
                         }
                       },
 

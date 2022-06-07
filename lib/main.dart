@@ -35,6 +35,11 @@ class MyApp extends StatelessWidget {
 
           ),
         ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor:lightColorScheme.secondaryContainer,
+          elevation: 3,
+
+        ),
         // This is the theme of your application.
         //
         // Try running your application with "flutter run". You'll see the
@@ -46,13 +51,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
          primarySwatch: Colors.blue,
       ),
-      home:BottomRouter()
-      // AnimatedSplashScreen(
-      //   splashIconSize: 250,
-      //
-      //   nextScreen: , splash: Image.asset('assets/logo.png',height: 300,) ,
-      //
-      // )
+      home:
+      AnimatedSplashScreen(
+        splashIconSize: 250,
+
+        nextScreen:LoginPage() , splash: Image.asset('assets/logo.png',height: 300,) ,
+
+      )
     );
   }
 }

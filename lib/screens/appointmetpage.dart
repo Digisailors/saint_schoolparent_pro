@@ -170,13 +170,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
                   ),
                 ),
                 SizedBox(height: 30),
-                if (_timeRange != null)
+
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Center(
                       child: ElevatedButton(
                         child: Padding(
-                          padding: const EdgeInsets.only(right: 16.0,left: 16.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 16.0),
                           child: Text('Submit'),
                         ),
                         onPressed: () =>

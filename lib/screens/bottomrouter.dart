@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:saint_schoolparent_pro/screens/alertpage.dart';
+import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
 import 'package:saint_schoolparent_pro/screens/homepage.dart';
 
 
@@ -15,14 +17,8 @@ class _BottomRouterState extends State<BottomRouter> {
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static const List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    AppointmentList(),
+    AlertPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -45,12 +41,12 @@ class _BottomRouterState extends State<BottomRouter> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Business',
+            icon: Icon(Icons.calendar_month_rounded),
+            label: 'Appointment',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.add_alert),
+            label: 'Alerts',
           ),
         ],
         currentIndex: _selectedIndex,

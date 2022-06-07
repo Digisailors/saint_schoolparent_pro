@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saint_schoolparent_pro/screens/bottomrouter.dart';
 import 'package:saint_schoolparent_pro/screens/homepage.dart';
 
 import '../theme.dart';
@@ -15,6 +16,62 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool Isvisible = true;
 
+
+
+  Future<void> _showMyDialog() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+
+          content: SizedBox(
+            height: getHeight(context)*0.25,
+            child: Column(
+              children: [
+                CircleAvatar(
+                  radius: 40,
+                  backgroundImage: AssetImage('assets/logo.png'),
+
+                ),
+                
+               Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Text(' Please Enter your registered Email'),
+               ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: CustomTextformField(
+                    prefixIcon: Icon(Icons.email),
+                    hintText: 'Email',
+                  ),
+                ),
+              ],
+
+
+
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+
+            TextButton(
+              child: const Text('Reset password'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -29,49 +86,92 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: EdgeInsets.only(
                   top: getHeight(context) * 0.10,
-                  bottom: getHeight(context) * 0.10),
+                  bottom: getHeight(context) * 0.05),
               child: Image.asset(
                 'assets/logo.png',
                 height: getHeight(context) * 0.20,
               ),
             ),
-
-            Text('Welcome',style: getText(context).headline5,),
-            Text('Login To Your Accout',style: getText(context).bodyText1!.apply(color:getColor(context).secondary),),
+            Text(
+              'Welcome',
+              style: getText(context).headline5,
+            ),
+            Text(
+              'Login To Your Accout',
+              style: getText(context)
+                  .bodyText1!
+                  .apply(color: getColor(context).secondary),
+            ),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: getWidth(context) * 0.02,
                   vertical: getHeight(context) * 0.05),
               child: CustomTextformField(
                 prefixIcon: Icon(Icons.email),
-                controller: TextEditingController(),
                 hintText: 'Email',
               ),
             ),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: getWidth(context) * 0.02,
-                  vertical: getHeight(context) * 0.01),
+                  vertical: getHeight(context) * 0.001),
               child: CustomTextformField(
                 prefixIcon: Icon(Icons.password),
                 controller: TextEditingController(),
                 hintText: 'Password',
                 obscureText: Isvisible,
                 suffixIcon: IconButton(
-                  icon: Isvisible? Icon(Icons.visibility)
-                      : Icon(Icons.visibility_off)
-                      ,
+                  icon: Isvisible
+                      ? Icon(Icons.visibility)
+                      : Icon(Icons.visibility_off),
                   onPressed: () {
-                    setState((){
-                      Isvisible=!Isvisible;
-
+                    setState(() {
+                      Isvisible = !Isvisible;
                     });
                   },
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: getHeight(context) * 0.10),
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Not verified?',
+                    style: getText(context).button,
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Get.to(() => VerificationPage());
+                      },
+                      child: Text(
+                        'Click here',
+                        style: getText(context)
+                            .button
+                            ?.apply(color: getColor(context).inversePrimary),
+                      ))
+                ],
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextButton(
+                  onPressed: () {
+                    _showMyDialog();
+
+                  },
+                  child: Text(
+                    'Forgot Password?',
+                    style: getText(context).button
+                        ?.apply(color: getColor(context).inversePrimary),
+                  )),
+            ),
+
+            Padding(
+              padding:
+                  EdgeInsets.symmetric(vertical: getHeight(context) * 0.10),
               child: ElevatedButton(
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all(
@@ -86,17 +186,14 @@ class _LoginPageState extends State<LoginPage> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Login Successfully')),
                       );
-                      Get.to(()=>HomePage());
+                      Get.to(() => BottomRouter());
                     }
                   },
-
-
-
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: getWidth(context) * 0.15,
                         vertical: getHeight(context) * 0.02),
-                    child: Text('Verify'),
+                    child: Text('Login'),
                   )),
             )
           ],

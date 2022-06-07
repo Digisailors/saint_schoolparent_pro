@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saint_schoolparent_pro/screens/studentverificationpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 
 
@@ -22,7 +23,10 @@ class _HomePageState extends State<HomePage> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
-            child: Icon(Icons.person_add),
+            child: IconButton(onPressed: (){
+
+              Get.to(()=>Studentverification());
+            },icon: Icon(Icons.person_add),),
           )
         ],
       ),

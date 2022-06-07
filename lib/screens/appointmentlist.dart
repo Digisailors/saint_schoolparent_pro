@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:saint_schoolparent_pro/screens/appointmetpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 
 class AppointmentList extends StatefulWidget {
@@ -35,7 +37,9 @@ class _AppointmentListState extends State<AppointmentList> {
 
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {  },
+          onPressed: () {
+            Get.to(()=>AppointmentPage());
+          },
           child: Icon(Icons.add),
         ),
 

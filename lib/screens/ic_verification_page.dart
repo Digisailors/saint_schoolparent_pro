@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saint_schoolparent_pro/screens/loginpage.dart';
+import 'package:saint_schoolparent_pro/screens/registrationpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 import 'package:get/get.dart';
 
@@ -36,15 +37,7 @@ class _VerificationPageState extends State<VerificationPage> {
                   hintText: 'Parent IC NO',
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.01),
-                child: CustomTextformField(
-                  prefixIcon: Icon(Icons.person_pin_sharp),
-                  controller: TextEditingController(),
-                  hintText: 'Parent IC NO',
-                ),
-              ),
+
               Padding(
                 padding: EdgeInsets.symmetric(vertical: getHeight(context) * 0.10),
                 child: ElevatedButton(
@@ -55,7 +48,7 @@ class _VerificationPageState extends State<VerificationPage> {
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
                     )),
                     onPressed: () {
-                      Get.to(() => LoginPage());
+                      Get.to(() => RegistrationPage());
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -72,17 +65,18 @@ class _VerificationPageState extends State<VerificationPage> {
 class CustomTextformField extends StatelessWidget {
   const CustomTextformField({
     Key? key,
-    required this.controller,
+    this.controller,
     this.obscureText,
     required this.hintText,
     this.prefixIcon, this.suffixIcon,
   }) : super(key: key);
 
-  final TextEditingController controller;
+  final TextEditingController ?controller;
   final bool? obscureText;
   final String hintText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +91,7 @@ class CustomTextformField extends StatelessWidget {
       }
       return null;
       },
-          controller: TextEditingController(),
+          controller:controller,
           onChanged: (String) {},
           autofocus: true,
           obscureText: obscureText ?? false,

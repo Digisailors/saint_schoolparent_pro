@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saint_schoolparent_pro/screens/bottomrouter.dart';
 import 'package:saint_schoolparent_pro/screens/homepage.dart';
 
 import '../theme.dart';
@@ -89,7 +90,7 @@ class _StudentverificationState extends State<Studentverification> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Registred Successfully')),
                           );
-                          Get.to(()=>HomePage());
+                          Get.to(()=>BottomRouter());
                         }
                       },
 
