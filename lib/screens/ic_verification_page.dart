@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:saint_schoolparent_pro/screens/loginpage.dart';
+import 'package:saint_schoolparent_pro/controllers/parent.dart';
+import 'package:saint_schoolparent_pro/models/student.dart';
 import 'package:saint_schoolparent_pro/screens/registrationpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
-import 'package:get/get.dart';
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({Key? key}) : super(key: key);
@@ -12,53 +12,93 @@ class VerificationPage extends StatefulWidget {
 }
 
 class _VerificationPageState extends State<VerificationPage> {
+  final icNumberController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SingleChildScrollView(
-          child: Column(
-
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                    top: getHeight(context) *0.16, bottom: getHeight(context) * 0.05),
-                child: Image.asset(
-                  'assets/logo.png',
-                  height: getHeight(context) * 0.20,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(
-                    horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.05),
-                child: CustomTextformField(
-                  prefixIcon: Icon(Icons.person_pin_sharp),
-                  controller: TextEditingController(),
-                  hintText: 'Parent IC NO',
-                ),
-              ),
-
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: getHeight(context) * 0.10),
-                child: ElevatedButton(
-                    style: ButtonStyle(
-                      elevation: MaterialStateProperty.all(16
-                      ),
-                        shape: MaterialStateProperty.all(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: getHeight(context) * 0.16, bottom: getHeight(context) * 0.05),
+            child: Image.asset(
+              'assets/logo.png',
+              height: getHeight(context) * 0.20,
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.05),
+            child: CustomTextformField(
+              prefixIcon: const Icon(Icons.person_pin_sharp),
+              controller: icNumberController,
+              hintText: 'Parent IC NO',
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: getHeight(context) * 0.10),
+            child: ElevatedButton(
+                style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(16),
+                    shape: MaterialStateProperty.all(
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
                     )),
-                    onPressed: () {
-                      Get.to(() => RegistrationPage());
+                onPressed: () async {
+                  var parentsList = ParentController.loadChildrenByparent(parent: icNumberController.text);
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return FutureBuilder<List<Student>>(
+                        future: parentsList,
+                        initialData: const [],
+                        builder: (BuildContext context, AsyncSnapshot<List<Student>> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
+                            if (snapshot.hasData) {
+                              if (snapshot.data!.isEmpty) {
+                                return AlertDialog(
+                                    title: const Text("IC Number not found"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("Okay")),
+                                    ],
+                                    content: const Text(
+                                      "There is no related parent data for this IC Number. Kindly check the IC number once again",
+                                      textAlign: TextAlign.justify,
+                                    ));
+                              } else {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegistrationPage()));
+                                });
+                                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegistrationPage()));
+                              }
+                            } else {
+                              return const Text("There is no related student data");
+                            }
+                          }
+                          if (snapshot.hasError) {
+                            return Text(snapshot.error.toString());
+                          }
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      );
                     },
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: getWidth(context) * 0.15, vertical: getHeight(context) * 0.02),
-                      child: Text('Verify'),
-                    )),
-              ),
-            ],
+                  );
+                  // Get.to(() => const RegistrationPage());
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.15, vertical: getHeight(context) * 0.02),
+                  child: const Text('Verify'),
+                )),
           ),
-        ));
+        ],
+      ),
+    ));
   }
 }
 
@@ -68,15 +108,17 @@ class CustomTextformField extends StatelessWidget {
     this.controller,
     this.obscureText,
     required this.hintText,
-    this.prefixIcon, this.suffixIcon,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.validator,
   }) : super(key: key);
 
-  final TextEditingController ?controller;
+  final TextEditingController? controller;
   final bool? obscureText;
   final String hintText;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -85,18 +127,11 @@ class CustomTextformField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: TextFormField(
-           validator: (value) {
-      if (value == null || value.isEmpty) {
-      return 'Do not let the filed empty';
-      }
-      return null;
-      },
-          controller:controller,
-          onChanged: (String) {},
+          controller: controller,
+          validator: validator,
           autofocus: true,
           obscureText: obscureText ?? false,
           decoration: InputDecoration(
-
               hintText: hintText,
               enabledBorder: UnderlineInputBorder(
                 borderSide: BorderSide(
@@ -119,9 +154,7 @@ class CustomTextformField extends StatelessWidget {
                 ),
               ),
               prefixIcon: prefixIcon,
-
-          suffixIcon: suffixIcon
-          ),
+              suffixIcon: suffixIcon),
         ),
       ),
     );

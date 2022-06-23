@@ -1,20 +1,20 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:saint_schoolparent_pro/screens/alertpage.dart';
-import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
-import 'package:saint_schoolparent_pro/screens/appointmetpage.dart';
-import 'package:saint_schoolparent_pro/screens/bottomrouter.dart';
-import 'package:saint_schoolparent_pro/screens/homepage.dart';
-import 'package:saint_schoolparent_pro/screens/ic_verification_page.dart';
-import 'package:saint_schoolparent_pro/screens/loginpage.dart';
-import 'package:saint_schoolparent_pro/screens/profile.dart';
-import 'package:saint_schoolparent_pro/screens/registrationpage.dart';
-import 'package:saint_schoolparent_pro/screens/splashscreen.dart';
-import 'package:saint_schoolparent_pro/screens/studentverificationpage.dart';
+import 'package:get/get.dart';
+import 'package:saint_schoolparent_pro/controllers/auth.dart';
+import 'package:saint_schoolparent_pro/controllers/session.dart';
+import 'package:saint_schoolparent_pro/firebase_options.dart';
+import 'package:saint_schoolparent_pro/landing_page.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Get.put(AuthController());
+  Get.put(SessionController());
   runApp(const MyApp());
 }
 
@@ -25,40 +25,38 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: lightColorScheme,
-        textTheme: MyTexTheme,
-        tabBarTheme: TabBarTheme(
-          indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(width: 4.0,color: getColor(context).tertiary),
-
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: lightColorScheme,
+          textTheme: myTexTheme,
+          tabBarTheme: TabBarTheme(
+            indicator: UnderlineTabIndicator(
+              borderSide: BorderSide(width: 4.0, color: getColor(context).tertiary),
+            ),
           ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: lightColorScheme.secondaryContainer,
+            elevation: 3,
+          ),
+          // This is the theme of your application.
+          //
+          // Try running your application with "flutter run". You'll see the
+          // application has a blue toolbar. Then, without quitting the app, try
+          // changing the primarySwatch below to Colors.green and then invoke
+          // "hot reload" (press "r" in the console where you ran "flutter run",
+          // or simply save your changes to "hot reload" in a Flutter IDE).
+          // Notice that the counter didn't reset back to zero; the application
+          // is not restarted.
+          primarySwatch: Colors.blue,
         ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor:lightColorScheme.secondaryContainer,
-          elevation: 3,
-
-        ),
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-         primarySwatch: Colors.blue,
-      ),
-      home:
-      AnimatedSplashScreen(
-        splashIconSize: 250,
-
-        nextScreen:LoginPage() , splash: Image.asset('assets/logo.png',height: 300,) ,
-
-      )
-    );
+        home: AnimatedSplashScreen(
+          splashIconSize: 250,
+          nextScreen: const LandingPage(),
+          splash: Image.asset(
+            'assets/logo.png',
+            height: 300,
+          ),
+        ));
   }
 }
 

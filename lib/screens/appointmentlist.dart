@@ -14,74 +14,51 @@ class _AppointmentListState extends State<AppointmentList> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-
       length: 2,
       child: Scaffold(
-
         appBar: AppBar(
           title: const Text('Appointments'),
           centerTitle: true,
-
-          bottom: const PreferredSize(preferredSize:Size.fromHeight(40) , child: TabBar(
-            tabs: [
-            Tab(
-              child: Text('Upcoming'),
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(40),
+            child: TabBar(
+              tabs: [
+                Tab(
+                  child: Text('Upcoming'),
+                ),
+                Tab(
+                  child: Text('Completed'),
+                ),
+              ],
             ),
-            Tab(
-              child: Text('Completed'),
-            ),
-
-
-          ],),),
-
-
+          ),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            Get.to(()=>AppointmentPage());
+            Get.to(() => const AppointmentPage());
           },
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
         ),
-
         body: TabBarView(
-
-
           children: [
-
-               Padding(
-                 padding: const EdgeInsets.all(8.0),
-                 child: ListView.builder(
-
-                     itemCount: 20,
-                     itemBuilder: (context,index){
-
-
-                   return  AppointmentTile();
-
-                 }),
-               ),
-
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListView.builder(
-
                   itemCount: 20,
-                  itemBuilder: (context,index){
-
-
-                    return  AppointmentTile();
-
+                  itemBuilder: (context, index) {
+                    return const AppointmentTile();
                   }),
             ),
-
-
-
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
+                  itemCount: 20,
+                  itemBuilder: (context, index) {
+                    return const AppointmentTile();
+                  }),
+            ),
           ],
-
-
         ),
-
-
       ),
     );
   }
@@ -95,111 +72,97 @@ class AppointmentTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(2.0),
-      child: Card(
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child:Column(
-
-          children: [
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/logo.png'
-                    ''),
-              ),
-              title: Text('Teacher Name'),
-              trailing: SizedBox(
-                width: getWidth(context)*0.3,
-                child: Row(
-                  children: [
-
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: CircleAvatar(
-                        radius: 8,
-                        backgroundColor: Colors.greenAccent,
-                      ),
-                    ),
-                    Text('Approved',style: getText(context).bodySmall,),
-                  ],
+        padding: const EdgeInsets.all(2.0),
+        child: Card(
+          elevation: 3,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Column(
+            children: [
+              ListTile(
+                leading: const CircleAvatar(
+                  backgroundImage: AssetImage('assets/logo.png'
+                      ''),
                 ),
-              ),
-              subtitle: Text('Science'),
-              
-            ),
-            
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-
-
-                color: Colors.white60,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                title: const Text('Teacher Name'),
+                trailing: SizedBox(
+                  width: getWidth(context) * 0.3,
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
-
-
-
-                      Image.network('https://cdn-icons-png.flaticon.com/512/2784/2784459.png',height: 32,),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text('9:30 AM-10:30 AM'),
+                      const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircleAvatar(
+                          radius: 8,
+                          backgroundColor: Colors.greenAccent,
+                        ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Image.network('https://cdn-icons-png.flaticon.com/512/3652/3652191.png',height: 32,),
+                      Text(
+                        'Approved',
+                        style: getText(context).bodySmall,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0,right: 20),
-                        child: Text('Aug 15 2022'),
-                      )
-
-
-
                     ],
                   ),
                 ),
-
+                subtitle: const Text('Science'),
               ),
-            ),
-            ButtonBar(
-              alignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                
-                ElevatedButton(
-                    style: ButtonStyle(
-                        // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)
-                      ))
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                  color: Colors.white60,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.network(
+                          'https://cdn-icons-png.flaticon.com/512/2784/2784459.png',
+                          height: 32,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text('9:30 AM-10:30 AM'),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Image.network(
+                            'https://cdn-icons-png.flaticon.com/512/3652/3652191.png',
+                            height: 32,
+                          ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8.0, right: 20),
+                          child: Text('Aug 15 2022'),
+                        )
+                      ],
                     ),
-                    onPressed: (){}, child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: getWidth(context)*0.08),
-                      child: Text('Cancel',style: getText(context).bodySmall?.apply(color: Colors.white)),
-                    )),
-
-                ElevatedButton(
-                    style: ButtonStyle(
-                      // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
-                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)
-                        ))
-                    ),
-                    onPressed: (){}, child: Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: getWidth(context)*0.06 ),
-                  child: Text('reschedule',style: getText(context).bodySmall?.apply(color: Colors.white)),
-                )),
-              ],
-            ),
-            
-          ],
-
-        ),
-
-      )
-    );
+                  ),
+                ),
+              ),
+              ButtonBar(
+                alignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
+                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
+                      onPressed: () {},
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.08),
+                        child: Text('Cancel', style: getText(context).bodySmall?.apply(color: Colors.white)),
+                      )),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
+                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
+                      onPressed: () {},
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.06),
+                        child: Text('reschedule', style: getText(context).bodySmall?.apply(color: Colors.white)),
+                      )),
+                ],
+              ),
+            ],
+          ),
+        ));
   }
 }

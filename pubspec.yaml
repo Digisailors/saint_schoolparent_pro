@@ -39,6 +39,9 @@ dependencies:
   google_fonts: ^3.0.1
   syncfusion_flutter_datepicker: ^20.1.59
   time_range: ^1.0.2
+  firebase_core: ^1.17.1
+  cloud_firestore: ^3.1.17
+  firebase_auth: ^3.3.19
 
 dev_dependencies:
   flutter_test:

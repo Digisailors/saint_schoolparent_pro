@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class HomePageWidget extends StatefulWidget {
   const HomePageWidget({Key? key}) : super(key: key);
 
   @override
-  _HomePageWidgetState createState() => _HomePageWidgetState();
+  State<HomePageWidget> createState() => _HomePageWidgetState();
 }
 
 class _HomePageWidgetState extends State<HomePageWidget> {
@@ -29,17 +28,16 @@ class _HomePageWidgetState extends State<HomePageWidget> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-
         automaticallyImplyLeading: false,
-        title: Text(
+        title: const Text(
           'Page Title',
           style: TextStyle(
-                fontFamily: 'Poppins',
-                color: Colors.white,
-                fontSize: 22,
-              ),
+            fontFamily: 'Poppins',
+            color: Colors.white,
+            fontSize: 22,
+          ),
         ),
-        actions: [],
+        // actions: const [],
         centerTitle: false,
         elevation: 2,
       ),
@@ -51,22 +49,22 @@ class _HomePageWidgetState extends State<HomePageWidget> {
             mainAxisSize: MainAxisSize.max,
             children: [
               Align(
-                alignment: AlignmentDirectional(0, -0.25),
+                alignment: const AlignmentDirectional(0, -0.25),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: TextFormField(
                     controller: textController1,
-                    onChanged: (String){},
+                    onChanged: (string) {},
                     autofocus: true,
                     obscureText: false,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: '[Some hint text...]',
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0xFF120202),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -76,7 +74,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           color: Color(0xFF120202),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -84,27 +82,26 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       filled: true,
                       fillColor: Colors.white,
                     ),
-
                   ),
                 ),
               ),
               Align(
-                alignment: AlignmentDirectional(0, -0.25),
+                alignment: const AlignmentDirectional(0, -0.25),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: TextFormField(
                     controller: textController2,
-                    onChanged: (String){},
+                    onChanged: (string) {},
                     autofocus: true,
                     obscureText: false,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: '[Some hint text...]',
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0xFF120202),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -114,7 +111,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           color: Color(0xFF120202),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -122,27 +119,26 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       filled: true,
                       fillColor: Colors.white,
                     ),
-
                   ),
                 ),
               ),
               Align(
-                alignment: AlignmentDirectional(0, -0.25),
+                alignment: const AlignmentDirectional(0, -0.25),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: TextFormField(
                     controller: textController3,
-                    onChanged: (String){},
+                    onChanged: (string) {},
                     autofocus: true,
                     obscureText: false,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: '[Some hint text...]',
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0xFF120202),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -152,7 +148,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           color: Color(0xFF120202),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -160,27 +156,26 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       filled: true,
                       fillColor: Colors.white,
                     ),
-
                   ),
                 ),
               ),
               Align(
-                alignment: AlignmentDirectional(0, -0.25),
+                alignment: const AlignmentDirectional(0, -0.25),
                 child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
+                  padding: const EdgeInsetsDirectional.fromSTEB(10, 10, 10, 10),
                   child: TextFormField(
                     controller: textController4,
-                    onChanged: (_){},
+                    onChanged: (_) {},
                     autofocus: true,
                     obscureText: false,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       hintText: '[Some hint text...]',
                       enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                           color: Color(0xFF120202),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -190,7 +185,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                           color: Color(0xFF120202),
                           width: 1,
                         ),
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4.0),
                           topRight: Radius.circular(4.0),
                         ),
@@ -198,7 +193,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
                       filled: true,
                       fillColor: Colors.white,
                     ),
-
                   ),
                 ),
               ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -10,28 +9,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
-  bool isDark= false;
-
+  bool isDark = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-
       appBar: AppBar(
-
-        title:Text('Profile'),
+        title: const Text('Profile'),
       ),
       body: SingleChildScrollView(
-
         child: Column(
-
           children: [
-
             Container(
               width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
@@ -42,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 ],
               ),
               child: Padding(
-                padding: EdgeInsetsDirectional.fromSTEB(24, 12, 24, 12),
+                padding: const EdgeInsetsDirectional.fromSTEB(24, 12, 24, 12),
                 child: Row(
                   mainAxisSize: MainAxisSize.max,
                   children: [
@@ -50,7 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       width: 76,
                       height: 76,
                       clipBehavior: Clip.antiAlias,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                       ),
                       child: Image.asset(
@@ -58,32 +49,19 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-                            child: Text(
-                              'Rajesh.S',
-                              style: getText(context).titleLarge
-                            ),
+                            padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                            child: Text('Rajesh.S', style: getText(context).titleLarge),
                           ),
                           Padding(
-                            padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
-                            child: Text(
-                              'User.name@domainname.com',
-                              style: getText(context).titleMedium
-                            ),
+                            padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+                            child: Text('User.name@domainname.com', style: getText(context).titleMedium),
                           ),
-
-
-
-
-
-
-
                         ],
                       ),
                     ),
@@ -94,34 +72,24 @@ class _ProfilePageState extends State<ProfilePage> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
-                child:SwitchListTile(
-
-
-                  onChanged: (bool value) {
-
-                  isDark= !value;
-
-                }, value: isDark,
-
-                )
-              ),
+                  child: SwitchListTile(
+                onChanged: (bool value) {
+                  isDark = !value;
+                },
+                value: isDark,
+              )),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Card(
                 child: ListTile(
-
                   title: Text('Switch Dark Mode'),
-
                 ),
               ),
             ),
           ],
-
         ),
-
       ),
-
     );
   }
 }

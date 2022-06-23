@@ -3,12 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 getHeight(BuildContext context) => MediaQuery.of(context).size.height;
 getWidth(BuildContext context) => MediaQuery.of(context).size.width;
- TextTheme  getText(BuildContext context) => Theme.of(context).textTheme;
-ColorScheme getColor(BuildContext context)=> Theme.of(context).colorScheme;
-
+TextTheme getText(BuildContext context) => Theme.of(context).textTheme;
+ColorScheme getColor(BuildContext context) => Theme.of(context).colorScheme;
 
 const seed = Color(0xFF6750A4);
-
 
 const lightColorScheme = ColorScheme(
   brightness: Brightness.light,
@@ -72,7 +70,7 @@ const darkColorScheme = ColorScheme(
   shadow: Color(0xFF000000),
 );
 
-TextTheme MyTexTheme = TextTheme(
+TextTheme myTexTheme = TextTheme(
   headline1: GoogleFonts.roboto(fontSize: 96, fontWeight: FontWeight.w300, letterSpacing: -1.5),
   headline2: GoogleFonts.roboto(fontSize: 60, fontWeight: FontWeight.w300, letterSpacing: -0.5),
   headline3: GoogleFonts.roboto(fontSize: 48, fontWeight: FontWeight.w400),
