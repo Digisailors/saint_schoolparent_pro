@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:get/get.dart';
 import 'package:saint_schoolparent_pro/controllers/session.dart';
 import 'package:saint_schoolparent_pro/firebase.dart';
+import 'package:saint_schoolparent_pro/models/appointment.dart';
 import 'package:saint_schoolparent_pro/models/parent.dart';
 import 'package:saint_schoolparent_pro/models/result.dart';
 import 'package:saint_schoolparent_pro/models/student.dart';
@@ -55,6 +56,16 @@ class ParentController extends GetxController {
     });
   }
 
+  Stream<List<Appointment>> streamAppointments() {
+    return firestore.collection('appointments').where("parent.icNumber", isEqualTo: parent.icNumber).snapshots().map(
+        (event) => event.docs.map((e) => Appointment.fromJson(e.data(), e.id)).where((element) => element.date.isAfter(DateTime.now())).toList());
+  }
+
+  Stream<List<Appointment>> streamFinishedAppointments() {
+    return firestore.collection('appointments').where("parent.icNumber", isEqualTo: parent.icNumber).snapshots().map(
+        (event) => event.docs.map((e) => Appointment.fromJson(e.data(), e.id)).where((element) => element.date.isBefore(DateTime.now())).toList());
+  }
+
   static Stream<Parent> getProfileStream() {
     return parents.where("uid", isEqualTo: auth.uid).snapshots().map((event) => event.docs.map((e) => Parent.fromJson(e.data())).first);
   }
@@ -72,11 +83,11 @@ class ParentController extends GetxController {
   }
 
   static Stream<List<Student>> streamChildrenByParent({required String parent}) {
-    return students.where("parent", arrayContains: parent).snapshots().map((event) => event.docs.map((e) => Student.fromJson(e.data())).toList());
+    return students.where("parents", arrayContains: parent).snapshots().map((event) => event.docs.map((e) => Student.fromJson(e.data())).toList());
   }
 
   static Future<List<Student>> loadChildrenByparent({required String parent}) {
-    return students.where("parent", arrayContains: parent).get().then((value) => value.docs.map((e) => Student.fromJson(e.data())).toList());
+    return students.where("parents", arrayContains: parent).get().then((value) => value.docs.map((e) => Student.fromJson(e.data())).toList());
   }
 }
 

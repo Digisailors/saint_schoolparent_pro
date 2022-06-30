@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:saint_schoolparent_pro/controllers/parent.dart';
+import 'package:saint_schoolparent_pro/models/parent.dart';
 import 'package:saint_schoolparent_pro/models/student.dart';
 import 'package:saint_schoolparent_pro/screens/registrationpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
@@ -45,36 +46,23 @@ class _VerificationPageState extends State<VerificationPage> {
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
                     )),
                 onPressed: () async {
-                  var parentsList = ParentController.loadChildrenByparent(parent: icNumberController.text);
+                  var parent = ParentController.getParent(icNumberController.text);
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return FutureBuilder<List<Student>>(
-                        future: parentsList,
-                        initialData: const [],
-                        builder: (BuildContext context, AsyncSnapshot<List<Student>> snapshot) {
+                      return FutureBuilder<Parent>(
+                        future: parent,
+                        builder: (BuildContext context, AsyncSnapshot<Parent> snapshot) {
                           if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
                             if (snapshot.hasData) {
-                              if (snapshot.data!.isEmpty) {
-                                return AlertDialog(
-                                    title: const Text("IC Number not found"),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          child: const Text("Okay")),
-                                    ],
-                                    content: const Text(
-                                      "There is no related parent data for this IC Number. Kindly check the IC number once again",
-                                      textAlign: TextAlign.justify,
-                                    ));
-                              } else {
-                                WidgetsBinding.instance.addPostFrameCallback((_) {
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RegistrationPage()));
-                                });
-                                // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const RegistrationPage()));
-                              }
+                              WidgetsBinding.instance.addPostFrameCallback((_) {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => RegistrationPage(
+                                              parent: snapshot.data!,
+                                            )));
+                              });
                             } else {
                               return const Text("There is no related student data");
                             }
@@ -111,6 +99,7 @@ class CustomTextformField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.validator,
+    this.enabled,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -119,6 +108,7 @@ class CustomTextformField extends StatelessWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
   final String? Function(String?)? validator;
+  final bool? enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +117,7 @@ class CustomTextformField extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: TextFormField(
+          enabled: enabled,
           controller: controller,
           validator: validator,
           autofocus: true,

@@ -24,10 +24,10 @@ class LandingPage extends StatelessWidget {
                 printError(info: snapshot.connectionState.toString());
                 if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
                   Parent parent = snapshot.data!;
-                  print(parent.toJson());
                   return BottomRouter(parent: parent);
                 }
                 if (snapshot.hasError) {
+                  printInfo(info: "I am here");
                   return Center(
                       child: AlertDialog(
                     title: const Text("Error occured"),

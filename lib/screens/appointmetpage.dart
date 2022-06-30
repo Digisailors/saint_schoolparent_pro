@@ -1,11 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:saint_schoolparent_pro/controllers/parent.dart';
+import 'package:saint_schoolparent_pro/models/appointment.dart';
+import 'package:saint_schoolparent_pro/screens/formController/appointment_form_controller.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:time_range/time_range.dart';
 
+import '../models/biodata.dart';
+
 class AppointmentPage extends StatefulWidget {
-  const AppointmentPage({Key? key}) : super(key: key);
+  const AppointmentPage({Key? key, this.appointment}) : super(key: key);
+
+  final Appointment? appointment;
 
   @override
   State<AppointmentPage> createState() => _AppointmentPageState();
@@ -14,22 +21,18 @@ class AppointmentPage extends StatefulWidget {
 class _AppointmentPageState extends State<AppointmentPage> {
   // int? _value = 1;
   // ignore: unused_field
-  DateTime _selectedDate = DateTime.now();
 
-  final _defaultTimeRange = TimeRangeResult(
-    const TimeOfDay(hour: 14, minute: 50),
-    const TimeOfDay(hour: 15, minute: 20),
-  );
-  TimeRangeResult? _timeRange = TimeRangeResult(
-    const TimeOfDay(hour: 14, minute: 50),
-    const TimeOfDay(hour: 15, minute: 20),
-  );
   @override
   void initState() {
     super.initState();
-    _timeRange = _defaultTimeRange;
-    _selectedDate = DateTime.now();
+    if (widget.appointment != null) {
+      controller = AppointmentFormController.fromAppointment(widget.appointment!);
+    } else {
+      controller = AppointmentFormController(parent: parentController.parent);
+    }
   }
+
+  late AppointmentFormController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -44,26 +47,39 @@ class _AppointmentPageState extends State<AppointmentPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                'Responsible person',
+            ListTile(
+              title: Text(
+                "Subject",
                 style: getText(context).titleLarge,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                elevation: 2,
-                child: ListTile(
-                  title: const Text('Teacher name'),
-                  subtitle: const Text('Subject'),
-                  trailing: CircleAvatar(
-                    child: Image.network('https://cdn-icons-png.flaticon.com/512/949/949666.png'),
-                  ),
+              subtitle: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: TextFormField(
+                  controller: controller.purpose,
+                  decoration: const InputDecoration(border: OutlineInputBorder()),
                 ),
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.all(16.0),
+            //   child: Text(
+            //     'Responsible person',
+            //     style: getText(context).titleLarge,
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: Card(
+            //     elevation: 2,
+            //     child: ListTile(
+            //       title: const Text('Subject'),
+            //       subtitle: const Text('Subject'),
+            //       trailing: CircleAvatar(
+            //         child: Image.network('https://cdn-icons-png.flaticon.com/512/949/949666.png'),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             const Divider(),
             ListTile(
               title: Text(
@@ -78,13 +94,15 @@ class _AppointmentPageState extends State<AppointmentPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: SfDateRangePicker(
+                    initialSelectedDate: controller.date,
+                    minDate: DateTime.now(),
                     selectionMode: DateRangePickerSelectionMode.single,
                     onSelectionChanged: (DateRangePickerSelectionChangedArgs date) {
                       if (kDebugMode) {
                         print(date.value);
                       }
                       setState(() {
-                        _selectedDate = date.value;
+                        controller.date = date.value;
                       });
                     },
                   ),
@@ -121,10 +139,13 @@ class _AppointmentPageState extends State<AppointmentPage> {
                     activeBackgroundColor: getColor(context).primary,
                     firstTime: const TimeOfDay(hour: 8, minute: 00),
                     lastTime: const TimeOfDay(hour: 20, minute: 00),
-                    initialRange: _timeRange,
+                    initialRange: controller.timeRange,
                     timeStep: 10,
-                    timeBlock: 30,
-                    onRangeCompleted: (range) => setState(() => _timeRange = range),
+                    timeBlock: 10,
+                    onRangeCompleted: (range) => setState(() {
+                      controller.fromTime = range?.start ?? controller.fromTime;
+                      controller.toTime = range?.end ?? controller.toTime;
+                    }),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -136,7 +157,17 @@ class _AppointmentPageState extends State<AppointmentPage> {
                         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
                         child: Text('Submit'),
                       ),
-                      onPressed: () => setState(() => _timeRange = _defaultTimeRange),
+                      onPressed: () {
+                        var appointment = controller.appointment;
+                        if (appointment.date.isBefore(DateTime.now())) {
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Please Enter a future date or time")));
+                        } else {
+                          appointment.add().then((value) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value.message)));
+                            Navigator.of(context).pop();
+                          });
+                        }
+                      },
                     ),
                   ),
                 )

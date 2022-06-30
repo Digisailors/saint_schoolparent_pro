@@ -7,8 +7,8 @@ import 'package:saint_schoolparent_pro/firebase.dart';
 import 'package:saint_schoolparent_pro/models/queue.dart';
 import 'package:saint_schoolparent_pro/models/student.dart';
 
-class QueueController extends GetxController {
-  static QueueController instance = Get.find();
+class QueueListController extends GetxController {
+  static QueueListController instance = Get.find();
 
   List<StudentQueue> queuedStudents = [];
 
@@ -17,12 +17,23 @@ class QueueController extends GetxController {
     return returns;
   }
 
+  static const int seconds = 60;
+
   Map<String, int> countdown = {};
 
   @override
   void onInit() {
     listenQueue();
+    removeAllFromQueue();
     super.onInit();
+  }
+
+  removeAllFromQueue() {
+    queueRef.where('student.ic', whereIn: sessionController.parent!.children).get().then((value) {
+      for (var snapshot in value.docs) {
+        snapshot.reference.delete();
+      }
+    });
   }
 
   pushToQueue(Student student) {
@@ -46,10 +57,10 @@ class QueueController extends GetxController {
               queuedStudents.removeWhere((element) => element.icNumber == student.icNumber);
               queuedStudents.add(student);
               Timer.periodic(const Duration(seconds: 1), (timer) {
-                countdown[student.icNumber] = 10 - timer.tick;
-                if (timer.tick == 10) {
-                  change.doc.reference.delete();
-                  countdown[student.icNumber] = 10;
+                countdown[student.icNumber] = seconds - timer.tick;
+                if (timer.tick == seconds) {
+                  // change.doc.reference.delete();
+                  countdown[student.icNumber] = seconds;
                   timer.cancel();
                 }
                 update();
@@ -68,4 +79,4 @@ class QueueController extends GetxController {
   }
 }
 
-QueueController queueController = QueueController.instance;
+QueueListController queueLitsController = QueueListController.instance;

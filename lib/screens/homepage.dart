@@ -57,7 +57,8 @@ class _HomePageState extends State<HomePage> {
                     if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
                       var docs = snapshot.data!.docs;
                       var students = docs.map((e) => Student.fromJson(e.data())).toList();
-                      Get.put(QueueController());
+                      print(students.map((e) => e.toJson()).toList());
+                      Get.put(QueueListController());
                       return ListView.builder(
                           itemCount: students.length,
                           itemBuilder: ((context, index) {
@@ -99,7 +100,7 @@ class _StudentTileState extends State<StudentTile> {
     super.initState();
   }
 
-  QueueController get controller => queueController;
+  QueueListController get controller => queueLitsController;
 
   @override
   Widget build(BuildContext context) {
@@ -171,10 +172,10 @@ class _StudentTileState extends State<StudentTile> {
                                   // child: const Text("Button"),
                                   child: Text(
                                     controller.getQueue(widget.student.icNumber)?.queueStatus == null
-                                        ? "Not in Queue"
+                                        ? "0:00"
                                         : controller.getQueue(widget.student.icNumber)?.queueStatus == QueueStatus.waiting
-                                            ? "Waiting"
-                                            : (controller.countdown[widget.student.icNumber]!).toString().padLeft(2, '0'),
+                                            ? "0.00"
+                                            : "0:${(controller.countdown[widget.student.icNumber] ?? 0).toString().padLeft(2, '0')}",
                                     // : controller.countDown[].toString().padLeft(2, '0'),
                                     style: getText(context).labelSmall,
                                   ),

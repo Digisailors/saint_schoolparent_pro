@@ -5,27 +5,34 @@ import 'package:saint_schoolparent_pro/controllers/parent.dart';
 import 'package:saint_schoolparent_pro/landing_page.dart';
 import 'package:saint_schoolparent_pro/models/biodata.dart';
 import 'package:saint_schoolparent_pro/models/parent.dart';
+import 'package:saint_schoolparent_pro/screens/formController/parent_form_controller.dart';
 import 'package:saint_schoolparent_pro/widgets/dropdown.dart';
 
+import '../constants/states.dart';
 import '../theme.dart';
+import '../widgets/custom_drop_down.dart';
 import 'ic_verification_page.dart';
+import 'package:get/get.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({Key? key}) : super(key: key);
+  const RegistrationPage({Key? key, required this.parent}) : super(key: key);
+  final Parent parent;
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-  bool isVisible = true;
-  final email = TextEditingController();
+  @override
+  void initState() {
+    controller = ParentFormController.fromParent(widget.parent!);
+    super.initState();
+  }
+
+  late ParentFormController controller;
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-  final name = TextEditingController();
-  final icNumber = TextEditingController();
-  Gender gender = Gender.unspecified;
-  final address = TextEditingController();
+  bool isVisible = true;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -60,7 +67,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     right: getWidth(context) * 0.02,
                   ),
                   child: CustomTextformField(
-                    controller: name,
+                    controller: controller.name,
                     prefixIcon: const Icon(Icons.person),
                     hintText: 'Name',
                   ),
@@ -73,7 +80,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     right: getWidth(context) * 0.02,
                   ),
                   child: CustomTextformField(
-                    controller: icNumber,
+                    enabled: false,
+                    controller: controller.icNumber,
                     prefixIcon: const Icon(Icons.person),
                     hintText: 'IC NUmber',
                   ),
@@ -84,9 +92,54 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     vertical: getHeight(context) * 0.02,
                   ),
                   child: CustomTextformField(
-                    controller: address,
+                    controller: controller.addressLine1,
                     prefixIcon: const Icon(Icons.email),
-                    hintText: 'Address',
+                    hintText: 'Address Line 1',
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: getWidth(context) * 0.02,
+                    vertical: getHeight(context) * 0.02,
+                  ),
+                  child: CustomTextformField(
+                    controller: controller.addressLine2,
+                    prefixIcon: const Icon(Icons.email),
+                    hintText: 'Address Line 2',
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: getWidth(context) * 0.02,
+                    vertical: getHeight(context) * 0.02,
+                  ),
+                  child: CustomDropDown<String?>(
+                    selectedValue: controller.state,
+                    // validator: requiredValidator,
+                    items: stateItems,
+                    labelText: "State",
+                    onChanged: (state) {
+                      setState(() {
+                        controller.city = null;
+                        controller.state = state;
+                      });
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: getWidth(context) * 0.02,
+                    vertical: getHeight(context) * 0.02,
+                  ),
+                  child: CustomDropDown<String?>(
+                    selectedValue: controller.city,
+                    items: getCities(controller.state),
+                    labelText: "City",
+                    onChanged: (city) {
+                      setState(() {
+                        controller.city = city;
+                      });
+                    },
                   ),
                 ),
                 Padding(
@@ -99,7 +152,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ],
                     onChanged: (val) {
                       setState(() {
-                        gender = val ?? gender;
+                        controller.gender = val ?? controller.gender;
                       });
                     },
                     prefixIcon: const Icon(Icons.email),
@@ -109,11 +162,39 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.02),
                   child: CustomTextformField(
-                    controller: email,
+                    controller: controller.primaryPhone,
+                    prefixIcon: const Icon(Icons.phone),
+                    hintText: 'Primary Phone Number',
+                    validator: (string) {
+                      if (controller.primaryPhone.text.isEmpty || !controller.primaryPhone.text.isPhoneNumber) {
+                        return "Please enter a valid Phone Number";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.02),
+                  child: CustomTextformField(
+                    controller: controller.secondaryPhone,
+                    prefixIcon: const Icon(Icons.phone),
+                    hintText: 'Secondary Phone Number',
+                    validator: (string) {
+                      if (!controller.secondaryPhone.text.isPhoneNumber && controller.secondaryPhone.text.isNotEmpty) {
+                        return "Do not leave this field empty";
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.02),
+                  child: CustomTextformField(
+                    controller: controller.email,
                     prefixIcon: const Icon(Icons.email),
                     hintText: 'Email',
                     validator: (string) {
-                      if (email.text.isEmpty) {
+                      if (controller.email.text.isEmpty) {
                         return "Do not leave this field empty";
                       }
                       return null;
@@ -175,30 +256,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       )),
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
+
                         if (_formKey.currentState!.validate()) {
                           // If the form is valid, display a snackbar. In the real world,
                           // you'd often call a server or save the information in a database.
 
-                          var parent = Parent(icNumber: icNumber.text, email: email.text, name: name.text, children: [], gender: gender);
+                          var parent = controller.parent;
                           // print(parent.toJson());
-                          auth.createUserWithEmailAndPassword(email.text, passwordController.text).then((value) {
-                            if (value?.uid != null) {
-                              parent.uid = value!.uid;
-                              ParentController.registerParent(parent)
-                                  .then((value) => Get.offAll(() => const LandingPage()))
-                                  .onError((error, stackTrace) {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: const Text("Error occured"),
-                                        content: Text(error.toString()),
-                                      );
-                                    });
-                                return null;
-                              });
-                            }
-                          });
+                          if (parent != null) {
+                            auth.createUserWithEmailAndPassword(controller.email.text, passwordController.text).then((value) {
+                              if (value?.uid != null) {
+                                parent.uid = value!.uid;
+                                ParentController.registerParent(parent)
+                                    .then((value) => Get.offAll(() => const LandingPage()))
+                                    .onError((error, stackTrace) {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: const Text("Error occured"),
+                                          content: Text(error.toString()),
+                                        );
+                                      });
+                                  return null;
+                                });
+                              }
+                            });
+                          }
 
                           // ScaffoldMessenger.of(context).showSnackBar(
                           //   const SnackBar(content: Text('Registred Successfully')),

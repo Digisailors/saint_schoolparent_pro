@@ -8,8 +8,31 @@ class Parent extends Bio {
     required this.children,
     required gender,
     address,
+    addressLine1,
+    addressLine2,
+    city,
+    imageUrl,
+    lastName,
+    primaryPhone,
+    secondaryPhone,
+    state,
     this.uid,
-  }) : super(name: name, email: email, entityType: EntityType.parent, icNumber: icNumber, address: address, gender: gender);
+  }) : super(
+          name: name,
+          email: email,
+          entityType: EntityType.parent,
+          icNumber: icNumber,
+          address: address,
+          gender: gender,
+          addressLine1: addressLine1,
+          addressLine2: addressLine2,
+          city: city,
+          imageUrl: imageUrl,
+          lastName: lastName,
+          primaryPhone: primaryPhone,
+          secondaryPhone: secondaryPhone,
+          state: state,
+        );
 
   List<String> children;
   String? uid;
@@ -24,6 +47,14 @@ class Parent extends Bio {
     email = parent.email;
     name = parent.name;
     children = parent.children;
+    addressLine1 = parent.addressLine1;
+    addressLine2 = parent.addressLine2;
+    state = parent.state;
+    city = parent.city;
+    imageUrl = parent.imageUrl;
+    lastName = parent.lastName;
+    primaryPhone = parent.primaryPhone;
+    secondaryPhone = parent.secondaryPhone;
   }
 
   factory Parent.fromJson(Map<String, dynamic> json) => Parent(
@@ -34,11 +65,19 @@ class Parent extends Bio {
         email: json["email"] ?? '',
         name: json["name"],
         children: List<String>.from(json["children"].map((x) => x)),
+        addressLine1: json["addressLine1"],
+        addressLine2: json["addressLine2"],
+        state: json["state"],
+        city: json["city"],
+        imageUrl: json["imageUrl"],
+        lastName: json["lastName"],
+        primaryPhone: json["primaryPhone"],
+        secondaryPhone: json["secondaryPhone"],
       );
 
   Map<String, dynamic> toJson() {
-    var map = bio.json();
-    map.addAll({"children": children, "uid": uid});
+    Map<String, dynamic> map = {"children": children, "uid": uid};
+    map.addAll(super.toBioJson());
     return map;
   }
 }

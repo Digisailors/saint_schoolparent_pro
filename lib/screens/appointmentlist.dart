@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:saint_schoolparent_pro/controllers/parent.dart';
+import 'package:saint_schoolparent_pro/models/appointment.dart';
+import 'package:saint_schoolparent_pro/screens/appointment_bottom_sheet_time.dart';
 import 'package:saint_schoolparent_pro/screens/appointmetpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
+
+import '../models/biodata.dart';
 
 class AppointmentList extends StatefulWidget {
   const AppointmentList({Key? key}) : super(key: key);
@@ -43,18 +48,54 @@ class _AppointmentListState extends State<AppointmentList> {
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                  itemCount: 20,
-                  itemBuilder: (context, index) {
-                    return const AppointmentTile();
+              child: StreamBuilder<List<Appointment>>(
+                  stream: parentController.streamAppointments(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
+                      List<Appointment> appointments = snapshot.data!;
+                      if (appointments.isEmpty) {
+                        return const Center(
+                          child: Text("No Pending appointments"),
+                        );
+                      }
+                      return ListView.builder(
+                          itemCount: appointments.length,
+                          itemBuilder: (context, index) {
+                            return AppointmentTile(appointment: appointments[index]);
+                          });
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                  itemCount: 20,
-                  itemBuilder: (context, index) {
-                    return const AppointmentTile();
+              child: StreamBuilder<List<Appointment>>(
+                  stream: parentController.streamFinishedAppointments(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
+                      List<Appointment> appointments = snapshot.data!;
+                      return ListView.builder(
+                          itemCount: appointments.length,
+                          itemBuilder: (context, index) {
+                            print("rebuild");
+                            return AppointmentTile(appointment: appointments[index]);
+                          });
+                    }
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text(snapshot.error.toString()),
+                      );
+                    }
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }),
             ),
           ],
@@ -67,7 +108,26 @@ class _AppointmentListState extends State<AppointmentList> {
 class AppointmentTile extends StatelessWidget {
   const AppointmentTile({
     Key? key,
+    required this.appointment,
   }) : super(key: key);
+
+  final Appointment appointment;
+
+  String getUrl(EntityType type) {
+    switch (type) {
+      case EntityType.student:
+        return 'https://cdn-icons-png.flaticon.com/512/3829/3829933.png';
+
+      case EntityType.teacher:
+        return 'https://cdn-icons-png.flaticon.com/512/4696/4696727.png';
+
+      case EntityType.parent:
+        return 'https://cdn-icons-png.flaticon.com/512/780/780270.png';
+
+      case EntityType.admin:
+        return '';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,88 +137,122 @@ class AppointmentTile extends StatelessWidget {
           elevation: 3,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
                 leading: const CircleAvatar(
                   backgroundImage: AssetImage('assets/logo.png'
                       ''),
                 ),
-                title: const Text('Teacher Name'),
+                title: Text(appointment.purpose),
                 trailing: SizedBox(
                   width: getWidth(context) * 0.3,
                   child: Row(
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(8.0),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
                         child: CircleAvatar(
                           radius: 8,
-                          backgroundColor: Colors.greenAccent,
+                          backgroundColor: appointment.status == AppointmentStatus.approved ? Colors.greenAccent : Colors.blue,
                         ),
                       ),
                       Text(
-                        'Approved',
+                        appointment.status.toString().split('.').last.toUpperCase(),
                         style: getText(context).bodySmall,
                       ),
                     ],
                   ),
                 ),
-                subtitle: const Text('Science'),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text("Meeting Requested By : ${appointment.raisedBy == parentController.parent.icNumber ? "You" : "Admin"}"),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                  color: Colors.white60,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Image.network(
-                          'https://cdn-icons-png.flaticon.com/512/2784/2784459.png',
-                          height: 32,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text('9:30 AM-10:30 AM'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Image.network(
-                            'https://cdn-icons-png.flaticon.com/512/3652/3652191.png',
-                            height: 32,
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(left: 8.0, right: 20),
-                          child: Text('Aug 15 2022'),
-                        )
-                      ],
+                  child: ExpansionTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Image.network(
+                        'https://cdn-icons-png.flaticon.com/512/3652/3652191.png',
+                        height: 32,
+                      ),
                     ),
+                    // title: Text("${appointment.date.day}/${appointment.date.month}/${appointment.date.year}"),
+                    title: Text(appointment.date.toString()),
+                    subtitle: Text("${appointment.fromTime.format(context)} : ${appointment.toTime.format(context)}"),
+                    expandedCrossAxisAlignment: CrossAxisAlignment.start,
+                    expandedAlignment: Alignment.topLeft,
+                    children: [
+                      appointment.participants.isEmpty
+                          ? const Center(
+                              child: Text("No Participants"),
+                            )
+                          : Wrap(
+                              alignment: WrapAlignment.start,
+                              children: appointment.participants
+                                  .map((e) => Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Chip(
+                                          avatar: CircleAvatar(
+                                            child: Image.network(
+                                              getUrl(e.entityType),
+                                              height: getHeight(context) * 0.03,
+                                            ),
+                                          ),
+                                          label: Text(
+                                            (e as Bio).name,
+                                          ),
+                                        ),
+                                      ))
+                                  .toList()),
+                    ],
                   ),
                 ),
               ),
               ButtonBar(
-                alignment: MainAxisAlignment.spaceEvenly,
+                alignment: MainAxisAlignment.end,
                 children: [
+                  appointment.date.isBefore(DateTime.now())
+                      ? Container()
+                      : appointment.parentApproval != true
+                          ? ElevatedButton(
+                              style: ButtonStyle(
+                                  // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
+                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
+                              onPressed: () {
+                                appointment.parentApproval = true;
+                                appointment.status = (appointment.parentApproval && appointment.adminApproval)
+                                    ? AppointmentStatus.approved
+                                    : AppointmentStatus.pending;
+                                appointment.update();
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.08),
+                                child: Text('Accept', style: getText(context).bodySmall?.apply(color: Colors.white)),
+                              ))
+                          : Container(),
                   ElevatedButton(
                       style: ButtonStyle(
                           // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
                           shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
-                      onPressed: () {},
+                      onPressed: () {
+                        showModalBottomSheet(
+                            context: context,
+                            builder: (context) {
+                              return Container(
+                                constraints: const BoxConstraints(minHeight: 800),
+                                child: SingleChildScrollView(
+                                  child: AppointmentTime(appointment: appointment),
+                                ),
+                              );
+                            });
+                      },
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.08),
-                        child: Text('Cancel', style: getText(context).bodySmall?.apply(color: Colors.white)),
-                      )),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          // backgroundColor:MaterialStateProperty.all(getColor(context).errorContainer),
-                          shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))),
-                      onPressed: () {},
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.06),
-                        child: Text('reschedule', style: getText(context).bodySmall?.apply(color: Colors.white)),
-                      )),
+                        child: Text('Reschedule', style: getText(context).bodySmall?.apply(color: Colors.white)),
+                      ))
                 ],
               ),
             ],

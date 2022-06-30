@@ -1,46 +1,112 @@
-import '../controllers/student.dart';
 import 'biodata.dart';
+import 'parent.dart';
 
 class Student extends Bio {
-  Student(
-      {required icNumber,
-      required this.studentClass,
-      required this.section,
-      required name,
-      required email,
-      required this.parent,
-      required this.siblings,
-      required gender,
-      address})
-      : super(name: name, email: email, entityType: EntityType.student, icNumber: icNumber, address: address, gender: gender);
+  Student({
+    required String icNumber,
+    required this.studentClass,
+    required this.section,
+    required String name,
+    required String email,
+    required Gender gender,
+    required this.father,
+    required this.guardian,
+    required this.mother,
+    String? address,
+    String? addressLine1,
+    String? addressLine2,
+    String? city,
+    String? imageUrl,
+    String? lastName,
+    String? primaryPhone,
+    String? secondaryPhone,
+    String? state,
+  }) : super(
+          name: name,
+          email: email,
+          entityType: EntityType.student,
+          icNumber: icNumber,
+          address: address,
+          gender: gender,
+          addressLine1: addressLine1,
+          addressLine2: addressLine2,
+          city: city,
+          imageUrl: imageUrl,
+          lastName: lastName,
+          primaryPhone: primaryPhone,
+          secondaryPhone: secondaryPhone,
+          state: state,
+        );
 
   String studentClass;
   String section;
-  List<String> parent;
-  List<String> siblings;
+
+  Parent? father;
+  Parent? mother;
+  Parent? guardian;
+
+  List<String> get parents {
+    List<String> result = [];
+    if (father != null) {
+      result.add(father!.icNumber);
+    }
+    if (mother != null) {
+      result.add(mother!.icNumber);
+    }
+    if (guardian != null) {
+      result.add(guardian!.icNumber);
+    }
+    return result;
+  }
 
   Bio get bio => this;
-  StudentController get controller => StudentController(this);
   factory Student.fromJson(Map<String, dynamic> json) => Student(
         icNumber: json["ic"],
-        studentClass: json["class"],
-        section: json["section"],
-        address: json["address"],
         name: json["name"],
         email: json["email"] ?? '',
         gender: json["gender"] == null ? Gender.male : Gender.values.elementAt(json["gender"]),
-        parent: json["parent"] == null ? [] : List<String>.from(json["parent"].map((x) => x)),
-        siblings: json["siblings"] == null ? [] : List<String>.from(json["siblings"].map((x) => x)),
+        address: json["address"],
+        addressLine1: json["addressLine1"],
+        addressLine2: json["addressLine2"],
+        city: json["city"],
+        imageUrl: json["imageUrl"],
+        lastName: json["lastName"],
+        primaryPhone: json["primaryPhone"],
+        secondaryPhone: json["secondaryPhone"],
+        state: json["state"],
+        //-------------------------------------------
+        father: json["father"] != null ? Parent.fromJson(json['father']) : null,
+        guardian: json["guardian"] != null ? Parent.fromJson(json['guardian']) : null,
+        mother: json["mother"] != null ? Parent.fromJson(json['mother']) : null,
+        //-------------------------------------------
+        studentClass: json["class"],
+        section: json["section"],
       );
 
-  @override
-  Map<String, dynamic> json() => {
+  Map<String, dynamic> toJson() => {
         "ic": icNumber,
-        "class": studentClass,
-        "section": section,
         "name": name,
         "email": email,
-        "parent": List<dynamic>.from(parent.map((x) => x)),
-        "siblings": siblings,
+        "gender": gender.index,
+        "entityType": entityType.index,
+        "address": address,
+        "addressLine1": addressLine1,
+        "addressLine2": addressLine2,
+        "city": city,
+        "imageUrl": imageUrl,
+        "lastName": lastName,
+        "primaryPhone": primaryPhone,
+        'secondaryPhone': secondaryPhone,
+        "state": state,
+        "search": search,
+        //------------
+        "father": father?.toJson(),
+        "mother": mother?.toJson(),
+        "guardian": guardian?.toJson(),
+        //------------
+        "class": studentClass,
+        "section": section,
+        //------------
+        "parents": parents,
       };
 }

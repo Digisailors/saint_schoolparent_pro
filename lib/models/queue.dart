@@ -27,7 +27,7 @@ class StudentQueue {
       );
 
   Map<String, dynamic> toJson() => {
-        "student": student.json(),
+        "student": student.toJson(),
         "queuedTime": queuedTime,
         "queueStatus": queueStatus.index,
       };

@@ -49,6 +49,14 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
+        // builder: (context, child) {
+        //   return Scaffold(
+        //     floatingActionButton: FloatingActionButton(onPressed: () {
+        //       auth.signOut();
+        //     }),
+        //     body: child,
+        //   );
+        // },
         home: AnimatedSplashScreen(
           splashIconSize: 250,
           nextScreen: const LandingPage(),

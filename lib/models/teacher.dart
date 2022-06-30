@@ -20,7 +20,7 @@ class Teacher extends Bio {
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> map = {"className": className, "section": section};
-    map.addAll(super.json());
+    map.addAll(super.toBioJson());
     return map;
   }
 }
