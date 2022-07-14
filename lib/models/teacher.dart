@@ -1,8 +1,8 @@
 import 'biodata.dart';
 
 class Teacher extends Bio {
-  Teacher({required this.className, required this.section, required email, required icNumber, required name, required gender})
-      : super(email: email, entityType: EntityType.teacher, icNumber: icNumber, name: name, gender: gender);
+  Teacher({required this.className, required this.section, required email, required icNumber, required name, required gender, String? fcm})
+      : super(email: email, entityType: EntityType.teacher, icNumber: icNumber, name: name, gender: gender, fcm: fcm);
 
   String className;
   String section;

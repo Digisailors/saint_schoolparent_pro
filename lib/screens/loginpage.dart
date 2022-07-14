@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saint_schoolparent_pro/controllers/auth.dart';
@@ -14,7 +15,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool isVisible = true;
-
+  var emailController = TextEditingController();
+  final _fomKey = GlobalKey<FormState>();
   Future<void> _showMyDialog() async {
     return showDialog<void>(
       context: context,
@@ -23,24 +25,33 @@ class _LoginPageState extends State<LoginPage> {
         return AlertDialog(
           content: SizedBox(
             height: getHeight(context) * 0.25,
-            child: Column(
-              children: const [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage('assets/logo.png'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text(' Please Enter your registered Email'),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: CustomTextformField(
-                    prefixIcon: Icon(Icons.email),
-                    hintText: 'Email',
+            child: Form(
+              key: _fomKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const CircleAvatar(
+                    radius: 40,
+                    backgroundImage: AssetImage('assets/logo.png'),
                   ),
-                ),
-              ],
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(' Please Enter your registered Email'),
+                  ),
+                  CustomTextformField(
+                    prefixIcon: const Icon(Icons.email),
+                    hintText: 'Email',
+                    controller: emailController,
+                    validator: (p0) {
+                      if (emailController.text.removeAllWhitespace.isEmail) {
+                        return null;
+                      }
+                      return 'Please enter a valid email';
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           actions: <Widget>[
@@ -53,7 +64,9 @@ class _LoginPageState extends State<LoginPage> {
             TextButton(
               child: const Text('Reset password'),
               onPressed: () {
-                Navigator.of(context).pop();
+                if (_fomKey.currentState!.validate()) {
+                  auth.resetPassword(email: emailController.text.removeAllWhitespace).then((value) => Navigator.of(context).pop());
+                }
               },
             ),
           ],
@@ -89,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
               style: getText(context).headline5,
             ),
             Text(
-              'Login To Your Accounzt',
+              'Login To Your Account',
               style: getText(context).bodyText1!.apply(color: getColor(context).secondary),
             ),
             Padding(
@@ -98,6 +111,12 @@ class _LoginPageState extends State<LoginPage> {
                 prefixIcon: const Icon(Icons.email),
                 hintText: 'Email',
                 controller: email,
+                validator: (p0) {
+                  if (email.text.removeAllWhitespace.isEmail) {
+                    return null;
+                  }
+                  return 'Please enter a valid email';
+                },
               ),
             ),
             Padding(
@@ -107,6 +126,11 @@ class _LoginPageState extends State<LoginPage> {
                 controller: password,
                 hintText: 'Password',
                 obscureText: isVisible,
+                validator: (p0) {
+                  if (password.text.isEmpty) {
+                    return 'Please enter a password';
+                  }
+                },
                 suffixIcon: IconButton(
                   icon: isVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
                   onPressed: () {
@@ -164,7 +188,25 @@ class _LoginPageState extends State<LoginPage> {
                       //   const SnackBar(content: Text('Login Successfully')),
                       // );
                       // Get.to(() => const BottomRouter());
-                      auth.signInWithEmailAndPassword(email.text.removeAllWhitespace, password.text);
+                      auth.signInWithEmailAndPassword(email.text.removeAllWhitespace, password.text).onError((error, stackTrace) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              if (error is FirebaseAuthException) {
+                                return AlertDialog(
+                                  title: Text(error.code),
+                                  content: Text(error.message ?? 'Unknown error occured, Please try again'),
+                                  actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Okay"))],
+                                );
+                              } else {
+                                return AlertDialog(
+                                  title: const Text("Unknown Error"),
+                                  content: const Text('Unknown error occured, Please try again'),
+                                  actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Okay"))],
+                                );
+                              }
+                            });
+                      });
                     }
                   },
                   child: Padding(

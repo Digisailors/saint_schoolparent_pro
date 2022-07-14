@@ -21,7 +21,9 @@ class Student extends Bio {
     String? primaryPhone,
     String? secondaryPhone,
     String? state,
+    String? fcm,
   }) : super(
+          fcm: fcm,
           name: name,
           email: email,
           entityType: EntityType.student,

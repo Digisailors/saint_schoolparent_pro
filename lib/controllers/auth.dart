@@ -9,7 +9,11 @@ class AuthController extends GetxController {
   static AuthController instance = Get.find();
   final _firebaseAuth = FirebaseAuth.instance;
 
-  Stream<User?> authStateChanges() => _firebaseAuth.authStateChanges();
+  Stream<User?> authStateChanges() {
+    return _firebaseAuth.authStateChanges();
+  }
+
+  Map<String, dynamic> claims = {};
 
   @override
   void onInit() {
@@ -17,8 +21,14 @@ class AuthController extends GetxController {
     authStateChanges().listen((event) {
       if (event != null) {
         messaging.subscribeToTopic('parents');
+        event.getIdTokenResult().then((value) {
+          claims = value.claims ?? {};
+          update();
+        });
       } else {
         sessionController.session.parent = null;
+        claims = {};
+        update();
         messaging.unsubscribeFromTopic('parents');
       }
     });

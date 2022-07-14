@@ -38,6 +38,7 @@ class ParentFormController with BioFormController {
           //------------------------
           children: children.map((e) => e.text).toList(),
           uid: uid,
+          fcm: fcm,
         );
 
   copyWith(Parent parent) {
@@ -54,6 +55,7 @@ class ParentFormController with BioFormController {
     secondaryPhone.text = parent.secondaryPhone ?? '';
     children = parent.children.map((e) => TextEditingController(text: e)).toList();
     uid = parent.uid;
+    fcm = parent.fcm;
   }
 
   factory ParentFormController.fromParent(Parent parent) {
@@ -72,6 +74,7 @@ class ParentFormController with BioFormController {
     controller.secondaryPhone.text = parent.secondaryPhone ?? '';
     controller.children = parent.children.map((e) => TextEditingController(text: e)).toList();
     controller.uid = parent.uid;
+    controller.fcm = parent.fcm;
     return controller;
   }
 }

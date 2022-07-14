@@ -17,8 +17,9 @@ class Parent extends Bio {
       secondaryPhone,
       state,
       this.uid,
-      this.fcm})
+      fcm})
       : super(
+          fcm: fcm,
           name: name,
           email: email,
           entityType: EntityType.parent,
@@ -37,7 +38,7 @@ class Parent extends Bio {
 
   List<String> children;
   String? uid;
-  String? fcm;
+
   Bio get bio => this;
 
   copyWith(Parent parent) {

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saint_schoolparent_pro/controllers/auth.dart';
@@ -37,14 +38,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Registration'),
-            centerTitle: true,
-          ),
-          body: SingleChildScrollView(
+    return Scaffold(
+        appBar: AppBar(
+          title: const Text('Registration'),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,6 +145,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.02),
                   child: CustomDropdownField<Gender>(
+                    value: controller.gender,
                     items: const [
                       DropdownMenuItem(value: Gender.male, child: Text("MALE")),
                       DropdownMenuItem(value: Gender.female, child: Text("FEMALE")),
@@ -194,7 +196,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     hintText: 'Email',
                     validator: (string) {
                       if (controller.email.text.isEmpty) {
-                        return "Do not leave this field empty";
+                        return "Email is required";
                       }
                       return null;
                     },
@@ -208,8 +210,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     hintText: 'Password',
                     obscureText: isVisible,
                     validator: (val) {
-                      if (passwordController.text != confirmPasswordController.text) {
-                        return "Passwords do not match";
+                      if (passwordController.text.isEmpty) {
+                        return "Please enter a password";
                       }
                       return null;
                     },
@@ -280,6 +282,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
                                   return null;
                                 });
                               }
+                            }).onError((error, stackTrace) {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    if (error is FirebaseAuthException) {
+                                      return AlertDialog(
+                                        title: Text(error.code),
+                                        content: Text(error.message ?? 'Unknown error occured. Please try again'),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: const Text("Okay")),
+                                        ],
+                                      );
+                                    }
+                                    return AlertDialog(
+                                      title: const Text("Error occured"),
+                                      content: Text(error.toString()),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: const Text("Okay")),
+                                      ],
+                                    );
+                                  });
                             });
                           }
 
@@ -296,7 +327,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 )
               ],
             ),
-          )),
-    );
+          ),
+        ));
   }
 }

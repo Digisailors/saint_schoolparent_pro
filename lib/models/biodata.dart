@@ -14,6 +14,7 @@ class Bio {
     this.primaryPhone,
     this.secondaryPhone,
     this.state,
+    required this.fcm,
   });
 
   String name;
@@ -30,6 +31,7 @@ class Bio {
   String? secondaryPhone;
   String? imageUrl;
   Gender gender;
+  String? fcm;
 
   @override
   // ignore: hash_and_equals
@@ -55,6 +57,7 @@ class Bio {
   }
 
   factory Bio.fromBioJson(json) => Bio(
+        fcm: json["fcm"],
         name: json["name"] ?? '',
         entityType: EntityType.values.elementAt(json["entityType"]),
         icNumber: json["icNumber"] ?? '',
@@ -86,7 +89,8 @@ class Bio {
         "secondaryPhone": secondaryPhone,
         "imageUrl": imageUrl,
         "gender": gender.index,
-        "search": search
+        "search": search,
+        "fcm": fcm,
       };
 }
 

@@ -4,6 +4,7 @@ import 'package:saint_schoolparent_pro/models/parent.dart';
 import 'package:saint_schoolparent_pro/models/student.dart';
 import 'package:saint_schoolparent_pro/screens/registrationpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
+import 'package:get/get.dart';
 
 class VerificationPage extends StatefulWidget {
   const VerificationPage({Key? key}) : super(key: key);
@@ -14,6 +15,8 @@ class VerificationPage extends StatefulWidget {
 
 class _VerificationPageState extends State<VerificationPage> {
   final icNumberController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +32,22 @@ class _VerificationPageState extends State<VerificationPage> {
               height: getHeight(context) * 0.20,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.05),
-            child: CustomTextformField(
-              prefixIcon: const Icon(Icons.person_pin_sharp),
-              controller: icNumberController,
-              hintText: 'Parent IC NO',
+          Form(
+            key: _formKey,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.05),
+              child: CustomTextformField(
+                prefixIcon: const Icon(Icons.person_pin_sharp),
+                validator: (text) {
+                  if (icNumberController.text.isEmpty) {
+                    return 'Please enter a valid IC Number';
+                  } else {
+                    return null;
+                  }
+                },
+                controller: icNumberController,
+                hintText: 'Parent IC NO',
+              ),
             ),
           ),
           Padding(
@@ -46,37 +59,49 @@ class _VerificationPageState extends State<VerificationPage> {
                       RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
                     )),
                 onPressed: () async {
-                  var parent = ParentController.getParent(icNumberController.text);
-                  showDialog(
-                    context: context,
-                    builder: (context) {
-                      return FutureBuilder<Parent>(
-                        future: parent,
-                        builder: (BuildContext context, AsyncSnapshot<Parent> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
-                            if (snapshot.hasData) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => RegistrationPage(
-                                              parent: snapshot.data!,
-                                            )));
-                              });
-                            } else {
-                              return const Text("There is no related student data");
+                  if (_formKey.currentState!.validate()) {
+                    var parent = ParentController.getParent(icNumberController.text);
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return FutureBuilder<Parent>(
+                          future: parent,
+                          builder: (BuildContext context, AsyncSnapshot<Parent> snapshot) {
+                            if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
+                              if (snapshot.hasData) {
+                                WidgetsBinding.instance.addPostFrameCallback((_) {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RegistrationPage(
+                                                parent: snapshot.data!,
+                                              )));
+                                });
+                              } else {
+                                return AlertDialog(
+                                  title: const Text("NO PARENT RECORD"),
+                                  content: const Text("There is no related parent data available in the student records"),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("Okay")),
+                                  ],
+                                );
+                              }
                             }
-                          }
-                          if (snapshot.hasError) {
-                            return Text(snapshot.error.toString());
-                          }
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      );
-                    },
-                  );
+                            if (snapshot.hasError) {
+                              return Text(snapshot.error.toString());
+                            }
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }
                   // Get.to(() => const RegistrationPage());
                 },
                 child: Padding(

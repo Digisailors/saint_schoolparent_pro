@@ -24,16 +24,7 @@ class QueueListController extends GetxController {
   @override
   void onInit() {
     listenQueue();
-    removeAllFromQueue();
     super.onInit();
-  }
-
-  removeAllFromQueue() {
-    queueRef.where('student.ic', whereIn: sessionController.parent!.children).get().then((value) {
-      for (var snapshot in value.docs) {
-        snapshot.reference.delete();
-      }
-    });
   }
 
   pushToQueue(Student student) {
@@ -48,27 +39,32 @@ class QueueListController extends GetxController {
           case DocumentChangeType.added:
             var student = StudentQueue.fromJson(change.doc.data());
             queuedStudents.add(student);
-
             update();
             break;
           case DocumentChangeType.modified:
             var student = StudentQueue.fromJson(change.doc.data());
             if (student.queueStatus == QueueStatus.inQueue) {
-              queuedStudents.removeWhere((element) => element.icNumber == student.icNumber);
-              queuedStudents.add(student);
-              Timer.periodic(const Duration(seconds: 1), (timer) {
-                countdown[student.icNumber] = seconds - timer.tick;
-                if (timer.tick == seconds) {
-                  // change.doc.reference.delete();
-                  countdown[student.icNumber] = seconds;
-                  timer.cancel();
-                }
-                update();
-              });
+              int index = queuedStudents.indexWhere((element) => element.icNumber == student.icNumber);
+
+              queuedStudents[index].timer = queuedStudents[index].timer ??
+                  Timer.periodic(const Duration(seconds: 1), (timer) {
+                    countdown[student.icNumber] = seconds - timer.tick;
+                    print(countdown[student.icNumber]);
+                    if (timer.tick == seconds) {
+                      countdown[student.icNumber] = seconds;
+                      timer.cancel();
+                    }
+                    update();
+                  });
+            } else {
+              student.queueStatus = QueueStatus.inQueue;
             }
             break;
           case DocumentChangeType.removed:
-            queuedStudents.removeWhere((element) => element.icNumber == change.doc.id);
+            var student = StudentQueue.fromJson(change.doc.data());
+            int index = queuedStudents.indexWhere((element) => element.icNumber == student.icNumber);
+            queuedStudents[index].timer?.cancel();
+            queuedStudents.removeAt(index);
             countdown.remove(change.doc.id);
             update();
             break;

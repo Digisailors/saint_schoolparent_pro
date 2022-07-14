@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -15,7 +16,9 @@ import 'package:saint_schoolparent_pro/theme.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  print('Handling a background message ${message.messageId}');
+  if (kDebugMode) {
+    print('Handling a background message ${message.messageId}');
+  }
 }
 
 AndroidNotificationChannel channel = AndroidNotificationChannel(

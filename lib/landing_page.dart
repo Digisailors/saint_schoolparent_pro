@@ -21,20 +21,37 @@ class LandingPage extends StatelessWidget {
       builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData) {
-            return StreamBuilder<Parent>(
+            // auth.signOut();
+            return StreamBuilder<Parent?>(
               stream: ParentController.getProfileStream(),
-              builder: (BuildContext context, AsyncSnapshot<Parent> snapshot) {
-                if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
-                  Get.put(() => PostListController());
-                  Parent parent = snapshot.data!;
-                  messaging.getToken().then((val) {
-                    if (val != null) {
-                      return ParentController(parent: parent).updateFcm(val);
-                    } else {
-                      return Result.error("Token not generated");
-                    }
-                  });
-                  return BottomRouter(parent: parent);
+              builder: (BuildContext context, AsyncSnapshot<Parent?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    Get.put(() => PostListController());
+                    Parent parent = snapshot.data!;
+                    messaging.getToken().then((val) {
+                      if (val != null) {
+                        return ParentController(parent: parent).updateFcm(val);
+                      } else {
+                        return Result.error("Token not generated");
+                      }
+                    });
+                    return BottomRouter(parent: parent);
+                  } else {
+                    return Center(
+                        child: AlertDialog(
+                      title: const Text("No Parent Profile Availble"),
+                      content: const Text("There is no parent profile available for this device. Please contact admin"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              auth.signOut();
+                              Get.offAll(() => const LandingPage());
+                            },
+                            child: const Text("OKAY"))
+                      ],
+                    ));
+                  }
                 }
                 if (snapshot.hasError) {
                   return Center(

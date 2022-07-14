@@ -66,8 +66,14 @@ class ParentController extends GetxController {
         (event) => event.docs.map((e) => Appointment.fromJson(e.data(), e.id)).where((element) => element.date.isBefore(DateTime.now())).toList());
   }
 
-  static Stream<Parent> getProfileStream() {
-    return parents.where("uid", isEqualTo: auth.uid).snapshots().map((event) => event.docs.map((e) => Parent.fromJson(e.data())).first);
+  static Stream<Parent?> getProfileStream() {
+    return parents.where("uid", isEqualTo: auth.uid).snapshots().map((event) {
+      if (event.docs.isEmpty) {
+        return null;
+      } else {
+        return Parent.fromJson(event.docs.first.data());
+      }
+    });
   }
 
   static Future<void> registerParent(Parent parent) {

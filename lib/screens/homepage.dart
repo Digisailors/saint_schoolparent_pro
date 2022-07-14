@@ -168,14 +168,12 @@ class _StudentTileState extends State<StudentTile> {
                                     backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.tertiaryContainer),
                                     shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    print(controller.getQueue(widget.student.icNumber)?.queueStatus);
+                                  },
                                   // child: const Text("Button"),
                                   child: Text(
-                                    controller.getQueue(widget.student.icNumber)?.queueStatus == null
-                                        ? "0:00"
-                                        : controller.getQueue(widget.student.icNumber)?.queueStatus == QueueStatus.waiting
-                                            ? "0.00"
-                                            : "0:${(controller.countdown[widget.student.icNumber] ?? 0).toString().padLeft(2, '0')}",
+                                    "00:${(controller.countdown[widget.student.icNumber] ?? 0).toString().padLeft(2, '0')}",
                                     // : controller.countDown[].toString().padLeft(2, '0'),
                                     style: getText(context).labelSmall,
                                   ),

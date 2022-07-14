@@ -24,7 +24,7 @@ class PostList extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Alerts'),
-          bottom: const TabBar(tabs: [Tab(text: 'Announcement'), Tab(text: 'Messages')]),
+          bottom: const TabBar(tabs: [Tab(text: 'General Announcement'), Tab(text: 'Messages')]),
         ),
         body: GetBuilder(
           init: announcementListController,

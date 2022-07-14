@@ -15,6 +15,7 @@ class BioFormController {
   final addressLine2 = TextEditingController();
   String? state;
   String? city;
+  String? fcm;
   final primaryPhone = TextEditingController();
   final secondaryPhone = TextEditingController();
   // final imageUrl = TextEditingController();
@@ -56,5 +57,6 @@ class BioFormController {
     gender = Gender.unspecified;
     image = null;
     fileData = null;
+    fcm = null;
   }
 }
