@@ -117,7 +117,7 @@ class _StudentTileState extends State<StudentTile> {
                 borderRadius: BorderRadius.circular(18),
               ),
               child: SizedBox(
-                height: getHeight(context) * 0.285,
+                height: getHeight(context) * 0.35,
                 width: getWidth(context) * 0.95,
                 child: Row(
                   children: [

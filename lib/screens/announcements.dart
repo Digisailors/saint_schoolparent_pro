@@ -24,7 +24,8 @@ class PostList extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Alerts'),
-          bottom: const TabBar(tabs: [Tab(text: 'General Announcement'), Tab(text: 'Messages')]),
+          bottom: const TabBar(
+              tabs: [Tab(text: 'General Announcement'), Tab(text: 'Messages')]),
         ),
         body: GetBuilder(
           init: announcementListController,
@@ -37,12 +38,16 @@ class PostList extends StatelessWidget {
                       Post post = announcementListController.posts[index];
                       return PostTile(post: post);
                     }),
-                ListView.builder(
-                    itemCount: announcementListController.personalPosts.length,
-                    itemBuilder: (context, index) {
-                      Post post = announcementListController.personalPosts[index];
-                      return PostTile(post: post);
-                    }),
+                announcementListController.personalPosts.isNotEmpty
+                    ? ListView.builder(
+                        itemCount:
+                            announcementListController.personalPosts.length,
+                        itemBuilder: (context, index) {
+                          Post post =
+                              announcementListController.personalPosts[index];
+                          return PostTile(post: post);
+                        })
+                    : Center(child: Text('No Messages Found Now')),
               ],
             );
           },
@@ -66,7 +71,8 @@ class _PostTileState extends State<PostTile> {
   void initState() {
     super.initState();
     FlutterDownloader.registerCallback(downloadCallback);
-    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
+    IsolateNameServer.registerPortWithName(
+        _port.sendPort, 'downloader_send_port');
     _port.listen((downloadData) {
       if (downloadData is TaskDownload) {
         for (int i = 0; i < taskId.length; i++) {
@@ -90,11 +96,13 @@ class _PostTileState extends State<PostTile> {
   final ReceivePort _port = ReceivePort();
 
   @pragma('vm:entry-point')
-  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
+  static void downloadCallback(
+      String id, DownloadTaskStatus status, int progress) {
     if (kDebugMode) {
       print('Task => ($id) ($status) ($progress)');
     }
-    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port')!;
+    final SendPort send =
+        IsolateNameServer.lookupPortByName('downloader_send_port')!;
     send.send(TaskDownload(id: id, status: status, progress: progress));
   }
 
@@ -157,9 +165,14 @@ class _PostTileState extends State<PostTile> {
                             onPressed: () {
                               List<Future> futures = [];
                               for (var element in widget.post.attachments) {
-                                futures.add(Downloader.requestDownload(element.url, element.name).then((value) {
+                                futures.add(Downloader.requestDownload(
+                                        element.url, element.name)
+                                    .then((value) {
                                   if (value != null) {
-                                    taskId.add(TaskDownload(id: value, progress: 0, status: DownloadTaskStatus.enqueued));
+                                    taskId.add(TaskDownload(
+                                        id: value,
+                                        progress: 0,
+                                        status: DownloadTaskStatus.enqueued));
                                   }
                                 }));
                               }
@@ -186,7 +199,8 @@ class _PostTileState extends State<PostTile> {
       if (task.status == DownloadTaskStatus.enqueued) {
         returnItems.add(const LinearProgressIndicator());
       } else if (task.status == DownloadTaskStatus.failed) {
-        returnItems.add(const LinearProgressIndicator(color: Colors.red, value: 1));
+        returnItems
+            .add(const LinearProgressIndicator(color: Colors.red, value: 1));
       } else if (task.status == DownloadTaskStatus.complete) {
         returnItems.add(Container());
       } else if (task.status == DownloadTaskStatus.running) {
