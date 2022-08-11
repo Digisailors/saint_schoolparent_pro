@@ -10,38 +10,26 @@ import 'package:saint_schoolparent_pro/models/student.dart';
 import 'auth.dart';
 
 class ParentController extends GetxController {
-  ParentController({required this.parent});
-  final Parent parent;
+  static List<Student> children = [];
 
-  static ParentController instance = Get.find();
+  static Parent get parent => sessionController.session.parent!;
 
-  @override
-  void onInit() {
-    listenParent();
-    sessionController.session.parent = parent;
-    super.onInit();
-  }
-
-  List<Student> children = [];
-
-  listenParent() {
-    parents.doc(parent.icNumber).snapshots().listen((event) {
+  static listenParent() {
+    parents.doc(sessionController.session.parent!.icNumber).snapshots().listen((event) {
       if (event.exists) {
         var tempParent = Parent.fromJson(event.data()!);
-        parent.copyWith(tempParent);
-        update();
+        sessionController.session.parent?.copyWith(tempParent);
       }
     });
   }
 
-  loadChildren() {
+  static loadChildren() {
     students.where('icNumber', arrayContainsAny: parent.children).get().then((event) {
       children = event.docs.map((e) => Student.fromJson(e.data())).toList();
-      update();
     });
   }
 
-  Future<bool> verifyChild(String child) {
+  static Future<bool> verifyChild(String child) {
     return students.where('parent', arrayContains: parent.icNumber).get().then((value) {
       if (value.docs.isNotEmpty) {
         var childrenIcs = value.docs.map((e) => Student.fromJson(e.data()).icNumber).toList();
@@ -56,12 +44,12 @@ class ParentController extends GetxController {
     });
   }
 
-  Stream<List<Appointment>> streamAppointments() {
+  static Stream<List<Appointment>> streamAppointments() {
     return firestore.collection('appointments').where("parent.icNumber", isEqualTo: parent.icNumber).snapshots().map(
         (event) => event.docs.map((e) => Appointment.fromJson(e.data(), e.id)).where((element) => element.date.isAfter(DateTime.now())).toList());
   }
 
-  Stream<List<Appointment>> streamFinishedAppointments() {
+  static Stream<List<Appointment>> streamFinishedAppointments() {
     return firestore.collection('appointments').where("parent.icNumber", isEqualTo: parent.icNumber).snapshots().map(
         (event) => event.docs.map((e) => Appointment.fromJson(e.data(), e.id)).where((element) => element.date.isBefore(DateTime.now())).toList());
   }
@@ -84,8 +72,8 @@ class ParentController extends GetxController {
     return parents.doc(icNumber).get().then((value) => Parent.fromJson(value.data()!));
   }
 
-  Future<Result> updateFcm(String fcm) {
-    printInfo(info: parent.icNumber);
+  static Future<Result> updateFcm(String fcm) {
+    // printInfo(info: parent.icNumber);
     return firestore
         .collection('parents')
         .doc(parent.icNumber)
@@ -106,5 +94,3 @@ class ParentController extends GetxController {
     return students.where("parents", arrayContains: parent).get().then((value) => value.docs.map((e) => Student.fromJson(e.data())).toList());
   }
 }
-
-ParentController parentController = ParentController.instance;

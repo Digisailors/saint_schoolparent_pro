@@ -31,6 +31,8 @@ AndroidNotificationChannel channel = AndroidNotificationChannel(
   vibrationPattern: Int64List.fromList([0, 1000, 1500, 1000]),
 );
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -40,6 +42,10 @@ Future<void> main() async {
     debug: true, // optional: set to false to disable printing logs to console (default: true)
     ignoreSsl: true, // option: set to false to disable working with http links (default: false)
   );
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   Get.put(AuthController());
   Get.put(SessionController());

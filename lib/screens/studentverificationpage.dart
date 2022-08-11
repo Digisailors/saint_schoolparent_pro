@@ -68,7 +68,7 @@ class _StudentverificationState extends State<Studentverification> {
                       onPressed: () {
                         // Validate returns true if the form is valid, or false otherwise.
                         if (_formKey.currentState!.validate()) {
-                          var result = parentController.verifyChild(studenIc.text);
+                          var result = ParentController.verifyChild(studenIc.text);
                           showDialog(
                               context: context,
                               builder: (context) {

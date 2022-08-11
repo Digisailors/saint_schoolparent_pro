@@ -34,10 +34,12 @@ class Bio {
   String? fcm;
 
   @override
-  // ignore: hash_and_equals
   bool operator ==(other) {
     return icNumber == (other as Bio).icNumber;
   }
+
+  @override
+  int get hashCode => icNumber.hashCode;
 
   List<String> makeSearchstring(String string) {
     List<String> list = [];

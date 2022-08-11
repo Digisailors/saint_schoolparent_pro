@@ -1,7 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:saint_schoolparent_pro/controllers/parent.dart';
 import 'package:saint_schoolparent_pro/controllers/postlist%20_controller.dart';
+import 'package:saint_schoolparent_pro/main.dart';
 import 'package:saint_schoolparent_pro/models/parent.dart';
 import 'package:saint_schoolparent_pro/screens/announcements.dart';
 import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
@@ -27,6 +30,32 @@ class _BottomRouterState extends State<BottomRouter> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (message.notification != null) {
+        var notification = message.notification;
+        var androidNotification = message.notification!.android;
+
+        if (notification != null && androidNotification != null) {
+          flutterLocalNotificationsPlugin.show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                  android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                icon: androidNotification.smallIcon,
+              )));
+        }
+      }
+    });
+    ParentController.listenParent();
+  }
+
+  @override
   void dispose() {
     super.dispose();
   }
@@ -39,7 +68,6 @@ class _BottomRouterState extends State<BottomRouter> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ParentController(parent: widget.parent));
     Get.put(PostListController());
     return Scaffold(
       body: Center(

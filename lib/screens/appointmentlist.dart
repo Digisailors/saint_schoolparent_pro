@@ -49,7 +49,7 @@ class _AppointmentListState extends State<AppointmentList> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder<List<Appointment>>(
-                  stream: parentController.streamAppointments(),
+                  stream: ParentController.streamAppointments(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
                       List<Appointment> appointments = snapshot.data!;
@@ -77,7 +77,7 @@ class _AppointmentListState extends State<AppointmentList> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder<List<Appointment>>(
-                  stream: parentController.streamFinishedAppointments(),
+                  stream: ParentController.streamFinishedAppointments(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
                       List<Appointment> appointments = snapshot.data!;
@@ -165,7 +165,7 @@ class AppointmentTile extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Text("Meeting Requested By : ${appointment.raisedBy == parentController.parent.icNumber ? "You" : "Admin"}"),
+                child: Text("Meeting Requested By : ${appointment.raisedBy == ParentController.parent.icNumber ? "You" : "Admin"}"),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

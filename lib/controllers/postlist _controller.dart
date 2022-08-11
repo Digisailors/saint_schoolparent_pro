@@ -85,6 +85,7 @@ class PostListController extends GetxController {
   List<String> get searchElement {
     var array = sessionController.session.parent!.children;
     array.add(sessionController.session.parent!.icNumber);
+    print("ARRAY LENGTH ${array.length}");
     return array;
   }
 

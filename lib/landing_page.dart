@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:saint_schoolparent_pro/controllers/auth.dart';
 import 'package:saint_schoolparent_pro/controllers/parent.dart';
 import 'package:saint_schoolparent_pro/controllers/postlist%20_controller.dart';
+import 'package:saint_schoolparent_pro/controllers/session.dart';
 import 'package:saint_schoolparent_pro/firebase.dart';
 import 'package:saint_schoolparent_pro/models/parent.dart';
 import 'package:saint_schoolparent_pro/models/result.dart';
@@ -29,9 +30,10 @@ class LandingPage extends StatelessWidget {
                   if (snapshot.hasData) {
                     Get.put(() => PostListController());
                     Parent parent = snapshot.data!;
+                    sessionController.session.parent = parent;
                     messaging.getToken().then((val) {
                       if (val != null) {
-                        return ParentController(parent: parent).updateFcm(val);
+                        return ParentController.updateFcm(val);
                       } else {
                         return Result.error("Token not generated");
                       }

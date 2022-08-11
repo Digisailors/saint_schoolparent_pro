@@ -26,7 +26,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
     if (widget.appointment != null) {
       controller = AppointmentFormController.fromAppointment(widget.appointment!);
     } else {
-      controller = AppointmentFormController(parent: parentController.parent);
+      controller = AppointmentFormController(parent: ParentController.parent);
     }
   }
 
