@@ -39,16 +39,7 @@ class _BottomRouterState extends State<BottomRouter> {
 
         if (notification != null && androidNotification != null) {
           flutterLocalNotificationsPlugin.show(
-              notification.hashCode,
-              notification.title,
-              notification.body,
-              NotificationDetails(
-                  android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                icon: androidNotification.smallIcon,
-              )));
+              notification.hashCode, notification.title, notification.body, NotificationDetails(android: androidNotificationDetails));
         }
       }
     });

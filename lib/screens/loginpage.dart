@@ -65,7 +65,12 @@ class _LoginPageState extends State<LoginPage> {
               child: const Text('Reset password'),
               onPressed: () {
                 if (_fomKey.currentState!.validate()) {
-                  auth.resetPassword(email: emailController.text.removeAllWhitespace).then((value) => Navigator.of(context).pop());
+                  auth.resetPassword(email: emailController.text.removeAllWhitespace).then((value) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Email has been sent.")));
+                  }).onError((error, stackTrace) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Some error occured")));
+                  });
                 }
               },
             ),

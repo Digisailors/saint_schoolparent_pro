@@ -19,16 +19,34 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (kDebugMode) {
     print('Handling a background message ${message.messageId}');
   }
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+
+  // If `onMessage` is triggered with a notification, construct our own
+  // local notification to show to users using the created channel.
+  if (notification != null && android != null) {
+    await flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: androidNotificationDetails,
+
+        ));
+  }
 }
 
-AndroidNotificationChannel channel = AndroidNotificationChannel(
-  'saintschool', // id
+AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+  'notification', // id
   'High Importance Notifications', // title
-  description: 'This channel is used for important notifications.', // description
-  importance: Importance.max,
+  channelDescription: 'This channel is used for important notifications.',
+  icon: '@mipmap/launcher_icon',
   playSound: true,
+  importance: Importance.max,
   sound: const RawResourceAndroidNotificationSound('notification'),
   vibrationPattern: Int64List.fromList([0, 1000, 1500, 1000]),
+  
+  // other properties...
 );
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -42,11 +60,32 @@ Future<void> main() async {
     debug: true, // optional: set to false to disable printing logs to console (default: true)
     ignoreSsl: true, // option: set to false to disable working with http links (default: false)
   );
+  await flutterLocalNotificationsPlugin.initialize(
+    const InitializationSettings(android: AndroidInitializationSettings('@mipmap/launcher_icon')),
+  );
+  // await flutterLocalNotificationsPlugin
+  //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+  //     ?.createNotificationChannel(channel);
 
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+
+    // If `onMessage` is triggered with a notification, construct our own
+    // local notification to show to users using the created channel.
+    if (notification != null && android != null) {
+      await flutterLocalNotificationsPlugin
+          .show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: androidNotificationDetails,
+              ))
+          .onError((error, stackTrace) => print(error.toString()));
+    }
+  });
   Get.put(AuthController());
   Get.put(SessionController());
   runApp(const MyApp());

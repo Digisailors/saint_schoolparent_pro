@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:saint_schoolparent_pro/controllers/session.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
+final FirebaseFunctions functions = FirebaseFunctions.instance;
 FirebaseFirestore firestore = FirebaseFirestore.instance;
 FirebaseMessaging messaging = FirebaseMessaging.instance;
 CollectionReference<Map<String, dynamic>> get parents => firestore.collection('parents');

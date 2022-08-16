@@ -6,6 +6,7 @@ import 'package:saint_schoolparent_pro/controllers/parent.dart';
 import 'package:saint_schoolparent_pro/controllers/queue.dart';
 import 'package:saint_schoolparent_pro/firebase.dart';
 import 'package:saint_schoolparent_pro/models/student.dart';
+import 'package:saint_schoolparent_pro/screens/attendance_page.dart';
 import 'package:saint_schoolparent_pro/screens/studentverificationpage.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 
@@ -127,11 +128,14 @@ class _StudentTileState extends State<StudentTile> {
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: CircleAvatar(
-                                radius: getWidth(context) * 0.15,
-                                backgroundImage: (widget.student.imageUrl != null
-                                    ? NetworkImage(widget.student.imageUrl!)
-                                    : const AssetImage('assets/logo.png')) as ImageProvider,
+                              child: Hero(
+                                tag: widget.student.icNumber,
+                                child: CircleAvatar(
+                                  radius: getWidth(context) * 0.15,
+                                  backgroundImage: (widget.student.imageUrl != null
+                                      ? NetworkImage(widget.student.imageUrl!)
+                                      : const AssetImage('assets/logo.png')) as ImageProvider,
+                                ),
                               ),
                             ),
                           ],
@@ -149,31 +153,35 @@ class _StudentTileState extends State<StudentTile> {
                               widget.student.name,
                               style: Theme.of(context).textTheme.bodyText1,
                             ),
-                            trailing: SizedBox(
-                              height: getHeight(context) * 0.03,
-                              width: getWidth(context) * 0.18,
-                              child: ElevatedButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.tertiaryContainer),
-                                  shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
-                                ),
-                                onPressed: () {
-                                  print(controller.getQueue(widget.student.icNumber)?.queueStatus);
-                                },
-                                // child: const Text("Button"),
-                                child: Text(
-                                  "00:${(controller.countdown[widget.student.icNumber] ?? 0).toString().padLeft(2, '0')}",
-                                  // : controller.countDown[].toString().padLeft(2, '0'),
-                                  style: getText(context).labelSmall?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
                           ),
                           const Divider(),
                           ButtonBar(
                             alignment: MainAxisAlignment.end,
                             children: [
-                              IconButton(onPressed: () {}, icon: const Icon(Icons.calendar_month)),
+                              IconButton(
+                                  onPressed: () {
+                                    Get.to(StudentAttendnace(
+                                      student: widget.student,
+                                    ));
+                                  },
+                                  icon: const Icon(Icons.calendar_month)),
+                              SizedBox(
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    CircularProgressIndicator(
+                                      backgroundColor: Colors.grey,
+                                      color: Colors.blue,
+                                      value: (controller.countdown[widget.student.icNumber] ?? 0) / 60,
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        (controller.countdown[widget.student.icNumber] ?? 60).toString(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                               ElevatedButton(
                                   style: ButtonStyle(
                                       shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
