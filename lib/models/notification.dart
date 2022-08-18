@@ -1,10 +1,11 @@
-class Notification {
-  Notification({
+class NotificationLog {
+  NotificationLog({
     required this.description,
     this.documentPath,
     required this.title,
     required this.time,
     required this.route,
+    required this.messageId,
   });
 
   String description;
@@ -12,8 +13,10 @@ class Notification {
   String title;
   DateTime time;
   String? route;
+  String? messageId;
 
-  factory Notification.fromJson(Map<String, dynamic> json) => Notification(
+  factory NotificationLog.fromJson(Map<String, dynamic> json, messageId) => NotificationLog(
+        messageId: messageId,
         description: json["description"],
         documentPath: json["document"],
         title: json["title"],
@@ -21,7 +24,8 @@ class Notification {
         route: json["route"],
       );
 
-  factory Notification.fromStringList(List<String> json) => Notification(
+  factory NotificationLog.fromStringList(List<String> json, messageId) => NotificationLog(
+        messageId: messageId,
         title: json[0],
         description: json[1],
         time: DateTime.parse(json[2]),
@@ -29,8 +33,8 @@ class Notification {
         documentPath: json[4],
       );
 
-  toStringList() {
-    return [title, description, time, route, documentPath];
+  List<String> toStringList() {
+    return [title, description, time.toIso8601String(), route ?? '', documentPath ?? ''];
   }
 
   Map<String, dynamic> toJson() => {

@@ -10,6 +10,8 @@ import 'package:saint_schoolparent_pro/screens/announcements.dart';
 import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
 import 'package:saint_schoolparent_pro/screens/homepage.dart';
 
+import 'notifications_list.dart';
+
 class BottomRouter extends StatefulWidget {
   const BottomRouter({Key? key, required this.parent}) : super(key: key);
 
@@ -26,7 +28,8 @@ class _BottomRouterState extends State<BottomRouter> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const AppointmentList(),
-    PostList(),
+    const PostList(),
+    const NotificationList(),
   ];
 
   @override
@@ -65,6 +68,10 @@ class _BottomRouterState extends State<BottomRouter> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.lightBlueAccent,
+        unselectedItemColor: Colors.blueGrey,
+        selectedItemColor: Colors.blue,
+        elevation: 3,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -75,8 +82,12 @@ class _BottomRouterState extends State<BottomRouter> {
             label: 'Appointment',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_alert),
+            icon: Icon(Icons.announcement),
             label: 'Announcements',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.notifications),
+            label: 'Notifications',
           ),
         ],
         currentIndex: _selectedIndex,
