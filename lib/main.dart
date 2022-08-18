@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
@@ -12,26 +13,40 @@ import 'package:saint_schoolparent_pro/controllers/auth.dart';
 import 'package:saint_schoolparent_pro/controllers/session.dart';
 import 'package:saint_schoolparent_pro/firebase_options.dart';
 import 'package:saint_schoolparent_pro/landing_page.dart';
+import 'package:saint_schoolparent_pro/models/notification.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences_android/shared_preferences_android.dart';
+import 'package:shared_preferences_ios/shared_preferences_ios.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (Platform.isAndroid) SharedPreferencesAndroid.registerWith();
+  if (Platform.isIOS) SharedPreferencesIOS.registerWith();
   if (kDebugMode) {
     print('Handling a background message ${message.messageId}');
   }
   RemoteNotification? notification = message.notification;
   AndroidNotification? android = message.notification?.android;
-
-  // If `onMessage` is triggered with a notification, construct our own
-  // local notification to show to users using the created channel.
   if (notification != null && android != null) {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      var _notification = NotificationLog(
+          messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+          description: notification.body ?? '',
+          title: notification.title ?? '',
+          time: DateTime.now(),
+          route: '');
+      prefs.setStringList(message.messageId!, _notification.toStringList());
+    } catch (e) {
+      print(e.toString());
+    }
     await flutterLocalNotificationsPlugin.show(
         notification.hashCode,
         notification.title,
         notification.body,
         NotificationDetails(
           android: androidNotificationDetails,
-
         ));
   }
 }
@@ -45,7 +60,7 @@ AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetai
   importance: Importance.max,
   sound: const RawResourceAndroidNotificationSound('notification'),
   vibrationPattern: Int64List.fromList([0, 1000, 1500, 1000]),
-  
+
   // other properties...
 );
 
@@ -75,6 +90,18 @@ Future<void> main() async {
     // If `onMessage` is triggered with a notification, construct our own
     // local notification to show to users using the created channel.
     if (notification != null && android != null) {
+      try {
+        var prefs = await SharedPreferences.getInstance();
+        var _notification = NotificationLog(
+            messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+            description: notification.body ?? '',
+            title: notification.title ?? '',
+            time: DateTime.now(),
+            route: '');
+        prefs.setStringList(message.messageId!, _notification.toStringList());
+      } catch (e) {
+        print(e.toString());
+      }
       await flutterLocalNotificationsPlugin
           .show(
               notification.hashCode,
