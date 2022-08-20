@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -29,23 +32,22 @@ class DefaultFirebaseOptions {
           'DefaultFirebaseOptions have not been configured for macos - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
+      case TargetPlatform.windows:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for linux - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       default:
         throw UnsupportedError(
           'DefaultFirebaseOptions are not supported for this platform.',
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBcKhVgUbtqPigCzDAqzCY2D3v5wyY2LhI',
-    appId: '1:485646374634:web:4dfac95b2a4fa12fbae993',
-    messagingSenderId: '485646374634',
-    projectId: 'school-app-aed59',
-    authDomain: 'school-app-aed59.firebaseapp.com',
-    databaseURL: 'https://school-app-aed59-default-rtdb.firebaseio.com',
-    storageBucket: 'school-app-aed59.appspot.com',
-    measurementId: 'G-693TE0P5Z7',
-  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAG8ZXmx3Nghu6ki48jmrGtby9Ip5gNmrM',
@@ -58,12 +60,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDwyiMCnESLdQZx4uk9YxZxhWh4P6clxxo',
-    appId: '1:485646374634:ios:9e79c78c131efe9dbae993',
+    appId: '1:485646374634:ios:0bd20e6abca163ebbae993',
     messagingSenderId: '485646374634',
     projectId: 'school-app-aed59',
     databaseURL: 'https://school-app-aed59-default-rtdb.firebaseio.com',
     storageBucket: 'school-app-aed59.appspot.com',
-    iosClientId: '485646374634-v6gtc2pcc4iu9fjprpaedmgasciga71m.apps.googleusercontent.com',
-    iosBundleId: 'com.grasp.saint-school',
+    iosClientId: '485646374634-79srftmumsruft5ur92mh2qgpr01rogl.apps.googleusercontent.com',
+    iosBundleId: 'com.grasp.saintSchoolparentPro',
   );
 }

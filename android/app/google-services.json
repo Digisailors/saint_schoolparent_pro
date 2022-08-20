@@ -1,0 +1,119 @@
+{
+  "project_info": {
+    "project_number": "485646374634",
+    "firebase_url": "https://school-app-aed59-default-rtdb.firebaseio.com",
+    "project_id": "school-app-aed59",
+    "storage_bucket": "school-app-aed59.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485646374634:android:3e35e74fe0ef8b14bae993",
+        "android_client_info": {
+          "package_name": "com.grasp.saint_school"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485646374634-tbfmh40jet4cbvfc0444idplc6e8chmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG8ZXmx3Nghu6ki48jmrGtby9Ip5gNmrM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485646374634-tbfmh40jet4cbvfc0444idplc6e8chmu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "485646374634-79srftmumsruft5ur92mh2qgpr01rogl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.grasp.saintSchoolparentPro"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485646374634:android:fae889ae6838cd38bae993",
+        "android_client_info": {
+          "package_name": "com.grasp.saint_schoolparent_pro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485646374634-tbfmh40jet4cbvfc0444idplc6e8chmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG8ZXmx3Nghu6ki48jmrGtby9Ip5gNmrM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485646374634-tbfmh40jet4cbvfc0444idplc6e8chmu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "485646374634-79srftmumsruft5ur92mh2qgpr01rogl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.grasp.saintSchoolparentPro"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485646374634:android:1a62b33315c47608bae993",
+        "android_client_info": {
+          "package_name": "com.ketanchoyal.our_e_school"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485646374634-tbfmh40jet4cbvfc0444idplc6e8chmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAG8ZXmx3Nghu6ki48jmrGtby9Ip5gNmrM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "485646374634-tbfmh40jet4cbvfc0444idplc6e8chmu.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "485646374634-79srftmumsruft5ur92mh2qgpr01rogl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.grasp.saintSchoolparentPro"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

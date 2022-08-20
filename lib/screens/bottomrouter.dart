@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
@@ -9,7 +10,9 @@ import 'package:saint_schoolparent_pro/models/parent.dart';
 import 'package:saint_schoolparent_pro/screens/announcements.dart';
 import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
 import 'package:saint_schoolparent_pro/screens/homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/notification.dart';
 import 'notifications_list.dart';
 
 class BottomRouter extends StatefulWidget {
@@ -35,17 +38,7 @@ class _BottomRouterState extends State<BottomRouter> {
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (message.notification != null) {
-        var notification = message.notification;
-        var androidNotification = message.notification!.android;
-
-        if (notification != null && androidNotification != null) {
-          flutterLocalNotificationsPlugin.show(
-              notification.hashCode, notification.title, notification.body, NotificationDetails(android: androidNotificationDetails));
-        }
-      }
-    });
+    loadFirebaseMessaging();
     ParentController.listenParent();
   }
 
@@ -95,5 +88,54 @@ class _BottomRouterState extends State<BottomRouter> {
         onTap: _onItemTapped,
       ),
     );
+  }
+
+  loadDataToLocal(RemoteMessage message) async {
+    RemoteNotification? notification = message.notification;
+    AndroidNotification? android = message.notification?.android;
+    if (notification != null && android != null) {
+      try {
+        var prefs = await SharedPreferences.getInstance();
+        var notificationLog = NotificationLog(
+            messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+            description: notification.body ?? '',
+            title: notification.title ?? '',
+            time: DateTime.now(),
+            route: '');
+        var result = prefs.setStringList(
+            message.messageId!, notificationLog.toStringList());
+        if (kDebugMode) {
+          print(result);
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          printError(info: 'Error occured!!');
+          print(e.toString());
+        }
+      }
+      await flutterLocalNotificationsPlugin
+          .show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                android: androidNotificationDetails,
+              ))
+          .onError((error, stackTrace) => print(error.toString()));
+    }
+  }
+
+  Future<void> loadFirebaseMessaging() async {
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      loadDataToLocal(message).then((val) => Get.to(const NotificationList()));
+    });
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(alert: true, sound: true);
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      loadDataToLocal(message);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content:
+              Text(message.notification?.title ?? 'Notification Received.')));
+    });
   }
 }

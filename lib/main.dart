@@ -1,7 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -31,13 +34,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (notification != null && android != null) {
     try {
       var prefs = await SharedPreferences.getInstance();
-      var _notification = NotificationLog(
+      var notificationLog = NotificationLog(
           messageId: DateTime.now().millisecondsSinceEpoch.toString(),
           description: notification.body ?? '',
           title: notification.title ?? '',
           time: DateTime.now(),
           route: '');
-      prefs.setStringList(message.messageId!, _notification.toStringList());
+      prefs.setStringList(message.messageId!, notificationLog.toStringList());
     } catch (e) {
       print(e.toString());
     }
@@ -51,7 +54,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 }
 
-AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
+AndroidNotificationDetails androidNotificationDetails =
+    AndroidNotificationDetails(
   'notification', // id
   'High Importance Notifications', // title
   channelDescription: 'This channel is used for important notifications.',
@@ -64,7 +68,8 @@ AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetai
   // other properties...
 );
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,47 +77,26 @@ Future<void> main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await FlutterDownloader.initialize(
-    debug: true, // optional: set to false to disable printing logs to console (default: true)
-    ignoreSsl: true, // option: set to false to disable working with http links (default: false)
+    debug:
+        true, // optional: set to false to disable printing logs to console (default: true)
+    ignoreSsl:
+        true, // option: set to false to disable working with http links (default: false)
   );
+
   await flutterLocalNotificationsPlugin.initialize(
-    const InitializationSettings(android: AndroidInitializationSettings('@mipmap/launcher_icon')),
+    const InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/launcher_icon'),
+      iOS: IOSInitializationSettings(
+        defaultPresentAlert: true,
+      ),
+    ),
   );
   // await flutterLocalNotificationsPlugin
   //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
   //     ?.createNotificationChannel(channel);
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
 
-    // If `onMessage` is triggered with a notification, construct our own
-    // local notification to show to users using the created channel.
-    if (notification != null && android != null) {
-      try {
-        var prefs = await SharedPreferences.getInstance();
-        var _notification = NotificationLog(
-            messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-            description: notification.body ?? '',
-            title: notification.title ?? '',
-            time: DateTime.now(),
-            route: '');
-        prefs.setStringList(message.messageId!, _notification.toStringList());
-      } catch (e) {
-        print(e.toString());
-      }
-      await flutterLocalNotificationsPlugin
-          .show(
-              notification.hashCode,
-              notification.title,
-              notification.body,
-              NotificationDetails(
-                android: androidNotificationDetails,
-              ))
-          .onError((error, stackTrace) => print(error.toString()));
-    }
-  });
   Get.put(AuthController());
   Get.put(SessionController());
   runApp(const MyApp());
@@ -131,7 +115,8 @@ class MyApp extends StatelessWidget {
           textTheme: myTexTheme,
           tabBarTheme: TabBarTheme(
             indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(width: 4.0, color: getColor(context).tertiary),
+              borderSide:
+                  BorderSide(width: 4.0, color: getColor(context).tertiary),
             ),
           ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(
