@@ -30,8 +30,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     print('Handling a background message ${message.messageId}');
   }
   RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null) {
+  // AndroidNotification? android = message.notification?.android;
+  if (notification != null) {
     try {
       var prefs = await SharedPreferences.getInstance();
       var notificationLog = NotificationLog(

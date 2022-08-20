@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -90,18 +92,22 @@ class _BottomRouterState extends State<BottomRouter> {
     );
   }
 
-  loadDataToLocal(RemoteMessage message) async {
+  Future<void> loadDataToLocal(RemoteMessage message) async {
     RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    if (notification != null && android != null) {
+    // AndroidNotification? android = message.notification?.android;
+    print("Load Data TO LOCAL Loaded");
+    if (notification != null) {
       try {
-        var prefs = await SharedPreferences.getInstance();
+        var prefs = await SharedPreferences.getInstance().catchError((error) {
+          printError();
+        });
+
         var notificationLog = NotificationLog(
             messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-            description: notification.body ?? '',
+            description: notification.body ?? message.data['body'],
             title: notification.title ?? '',
             time: DateTime.now(),
-            route: '');
+            route: message.data['route'] ?? '');
         var result = prefs.setStringList(
             message.messageId!, notificationLog.toStringList());
         if (kDebugMode) {
@@ -113,29 +119,44 @@ class _BottomRouterState extends State<BottomRouter> {
           print(e.toString());
         }
       }
-      await flutterLocalNotificationsPlugin
-          .show(
-              notification.hashCode,
-              notification.title,
-              notification.body,
-              NotificationDetails(
-                android: androidNotificationDetails,
-              ))
-          .onError((error, stackTrace) => print(error.toString()));
+      if (Platform.isAndroid) {
+        await flutterLocalNotificationsPlugin
+            .show(
+                notification.hashCode,
+                notification.title,
+                notification.body,
+                NotificationDetails(
+                  android: androidNotificationDetails,
+                ))
+            .onError((error, stackTrace) => print(error.toString()));
+      }
     }
   }
 
   Future<void> loadFirebaseMessaging() async {
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      loadDataToLocal(message).then((val) => Get.to(const NotificationList()));
+      loadDataToLocal(message).then((val) {
+        if (message.data['route'] != null) {
+          if (message.data['route'] == 'POSTS') {
+            Get.to(const PostList());
+            return;
+          }
+          if (message.data['route'] == 'APPOINTMENTS') {
+            Get.to(const AppointmentList());
+            return;
+          }
+        }
+        Get.to(const NotificationList());
+      });
     });
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(alert: true, sound: true);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      loadDataToLocal(message);
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content:
-              Text(message.notification?.title ?? 'Notification Received.')));
+      loadDataToLocal(message).then((value) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content:
+                Text(message.notification?.title ?? 'Notification Received.')));
+      }).catchError((error) => print(error.toString()));
     });
   }
 }

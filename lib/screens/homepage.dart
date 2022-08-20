@@ -47,18 +47,21 @@ class _HomePageState extends State<HomePage> {
             // init: parentController,
             builder: (context) {
           List<String> children = ParentController.parent.children;
-          print(children.length);
+          // print(children.length);
           if (children.isEmpty) {
             return const Center(child: Text("No Children added"));
           } else {
             return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
               stream: students.where('ic', whereIn: children).snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-                printInfo(info: snapshot.connectionState.toString());
-                if (snapshot.connectionState == ConnectionState.active && snapshot.hasData) {
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+                // printInfo(info: snapshot.connectionState.toString());
+                if (snapshot.connectionState == ConnectionState.active &&
+                    snapshot.hasData) {
                   var docs = snapshot.data!.docs;
-                  var students = docs.map((e) => Student.fromJson(e.data())).toList();
-                  print(students.map((e) => e.toJson()).toList());
+                  var students =
+                      docs.map((e) => Student.fromJson(e.data())).toList();
+                  // print(students.map((e) => e.toJson()).toList());
                   Get.put(QueueListController());
                   return ListView.builder(
                       itemCount: students.length,
@@ -132,9 +135,11 @@ class _StudentTileState extends State<StudentTile> {
                                 tag: widget.student.icNumber,
                                 child: CircleAvatar(
                                   radius: getWidth(context) * 0.15,
-                                  backgroundImage: (widget.student.imageUrl != null
+                                  backgroundImage: (widget.student.imageUrl !=
+                                          null
                                       ? NetworkImage(widget.student.imageUrl!)
-                                      : const AssetImage('assets/logo.png')) as ImageProvider,
+                                      : const AssetImage(
+                                          'assets/logo.png')) as ImageProvider,
                                 ),
                               ),
                             ),
@@ -172,11 +177,17 @@ class _StudentTileState extends State<StudentTile> {
                                     CircularProgressIndicator(
                                       backgroundColor: Colors.grey,
                                       color: Colors.blue,
-                                      value: (controller.countdown[widget.student.icNumber] ?? 0) / 60,
+                                      value: (controller.countdown[
+                                                  widget.student.icNumber] ??
+                                              0) /
+                                          60,
                                     ),
                                     Center(
                                       child: Text(
-                                        (controller.countdown[widget.student.icNumber] ?? 60).toString(),
+                                        (controller.countdown[
+                                                    widget.student.icNumber] ??
+                                                60)
+                                            .toString(),
                                       ),
                                     ),
                                   ],
@@ -184,12 +195,21 @@ class _StudentTileState extends State<StudentTile> {
                               ),
                               ElevatedButton(
                                   style: ButtonStyle(
-                                      shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(18))),
-                                      backgroundColor: MaterialStateProperty.all(const Color(0XFF48B253))),
-                                  onPressed: controller.getQueue(widget.student.icNumber)?.queueStatus != null
+                                      shape: MaterialStateProperty.all(
+                                          RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(18))),
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              const Color(0XFF48B253))),
+                                  onPressed: controller
+                                              .getQueue(widget.student.icNumber)
+                                              ?.queueStatus !=
+                                          null
                                       ? null
                                       : () {
-                                          controller.pushToQueue(widget.student);
+                                          controller
+                                              .pushToQueue(widget.student);
                                         },
                                   child: const Text('Pickup')),
                             ],

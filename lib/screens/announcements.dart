@@ -178,6 +178,10 @@ class _PostTileState extends State<PostTile> {
                               }
                               Future.wait(futures).then((value) {
                                 setState(() {});
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text("The files are downloaded")));
                               });
                             },
                             child: const Text("Download"),
