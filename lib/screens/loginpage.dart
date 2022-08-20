@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: Text(' Please Enter your registered Email'),
+                    child: Text(' Please enter your registered e-mail'),
                   ),
                   CustomTextformField(
                     prefixIcon: const Icon(Icons.email),
@@ -65,11 +65,16 @@ class _LoginPageState extends State<LoginPage> {
               child: const Text('Reset password'),
               onPressed: () {
                 if (_fomKey.currentState!.validate()) {
-                  auth.resetPassword(email: emailController.text.removeAllWhitespace).then((value) {
+                  auth
+                      .resetPassword(
+                          email: emailController.text.removeAllWhitespace)
+                      .then((value) {
                     Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Email has been sent.")));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Email has been sent.")));
                   }).onError((error, stackTrace) {
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Some error occured")));
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Some error occured")));
                   });
                 }
               },
@@ -96,7 +101,9 @@ class _LoginPageState extends State<LoginPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: getHeight(context) * 0.10, bottom: getHeight(context) * 0.05),
+              padding: EdgeInsets.only(
+                  top: getHeight(context) * 0.10,
+                  bottom: getHeight(context) * 0.05),
               child: Image.asset(
                 'assets/logo.png',
                 height: getHeight(context) * 0.20,
@@ -108,10 +115,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Text(
               'Login To Your Account',
-              style: getText(context).bodyText1!.apply(color: getColor(context).secondary),
+              style: getText(context)
+                  .bodyText1!
+                  .apply(color: getColor(context).secondary),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.05),
+              padding: EdgeInsets.symmetric(
+                  horizontal: getWidth(context) * 0.02,
+                  vertical: getHeight(context) * 0.05),
               child: CustomTextformField(
                 prefixIcon: const Icon(Icons.email),
                 hintText: 'Email',
@@ -125,7 +136,9 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.02, vertical: getHeight(context) * 0.001),
+              padding: EdgeInsets.symmetric(
+                  horizontal: getWidth(context) * 0.02,
+                  vertical: getHeight(context) * 0.001),
               child: CustomTextformField(
                 prefixIcon: const Icon(Icons.password),
                 controller: password,
@@ -137,7 +150,9 @@ class _LoginPageState extends State<LoginPage> {
                   }
                 },
                 suffixIcon: IconButton(
-                  icon: isVisible ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                  icon: isVisible
+                      ? const Icon(Icons.visibility)
+                      : const Icon(Icons.visibility_off),
                   onPressed: () {
                     setState(() {
                       isVisible = !isVisible;
@@ -161,7 +176,9 @@ class _LoginPageState extends State<LoginPage> {
                       },
                       child: Text(
                         'Click here',
-                        style: getText(context).button?.apply(color: getColor(context).inversePrimary),
+                        style: getText(context)
+                            .button
+                            ?.apply(color: getColor(context).inversePrimary),
                       ))
                 ],
               ),
@@ -174,15 +191,19 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Text(
                     'Forgot Password?',
-                    style: getText(context).button?.apply(color: getColor(context).inversePrimary),
+                    style: getText(context)
+                        .button
+                        ?.apply(color: getColor(context).inversePrimary),
                   )),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: getHeight(context) * 0.10),
+              padding:
+                  EdgeInsets.symmetric(vertical: getHeight(context) * 0.10),
               child: ElevatedButton(
                   style: ButtonStyle(
                       shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(100.0)),
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100.0)),
                   )),
                   onPressed: () {
                     // Validate returns true if the form is valid, or false otherwise.
@@ -193,21 +214,36 @@ class _LoginPageState extends State<LoginPage> {
                       //   const SnackBar(content: Text('Login Successfully')),
                       // );
                       // Get.to(() => const BottomRouter());
-                      auth.signInWithEmailAndPassword(email.text.removeAllWhitespace, password.text).onError((error, stackTrace) {
+                      auth
+                          .signInWithEmailAndPassword(
+                              email.text.removeAllWhitespace, password.text)
+                          .onError((error, stackTrace) {
                         showDialog(
                             context: context,
                             builder: (context) {
                               if (error is FirebaseAuthException) {
                                 return AlertDialog(
                                   title: Text(error.code),
-                                  content: Text(error.message ?? 'Unknown error occured, Please try again'),
-                                  actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Okay"))],
+                                  content: Text(error.message ??
+                                      'Unknown error occured, Please try again'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: const Text("Okay"))
+                                  ],
                                 );
                               } else {
                                 return AlertDialog(
                                   title: const Text("Unknown Error"),
-                                  content: const Text('Unknown error occured, Please try again'),
-                                  actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text("Okay"))],
+                                  content: const Text(
+                                      'Unknown error occured, Please try again'),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(),
+                                        child: const Text("Okay"))
+                                  ],
                                 );
                               }
                             });
@@ -215,7 +251,9 @@ class _LoginPageState extends State<LoginPage> {
                     }
                   },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: getWidth(context) * 0.15, vertical: getHeight(context) * 0.02),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: getWidth(context) * 0.15,
+                        vertical: getHeight(context) * 0.02),
                     child: const Text('Login'),
                   )),
             )
