@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:saint_schoolparent_pro/controllers/Attendance/transaction_controller.dart';
 import 'package:saint_schoolparent_pro/controllers/auth.dart';
 import 'package:saint_schoolparent_pro/controllers/session.dart';
 import 'package:saint_schoolparent_pro/firebase_options.dart';
@@ -54,8 +55,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   }
 }
 
-AndroidNotificationDetails androidNotificationDetails =
-    AndroidNotificationDetails(
+AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetails(
   'notification', // id
   'High Importance Notifications', // title
   channelDescription: 'This channel is used for important notifications.',
@@ -68,29 +68,27 @@ AndroidNotificationDetails androidNotificationDetails =
   // other properties...
 );
 
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  await FlutterDownloader.initialize(
-    debug:
-        true, // optional: set to false to disable printing logs to console (default: true)
-    ignoreSsl:
-        true, // option: set to false to disable working with http links (default: false)
-  );
-
-  await flutterLocalNotificationsPlugin.initialize(
-    const InitializationSettings(
-      android: AndroidInitializationSettings('@mipmap/launcher_icon'),
-      iOS: IOSInitializationSettings(
-        defaultPresentAlert: true,
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Future.wait([
+    FlutterDownloader.initialize(
+      debug: true, // optional: set to false to disable printing logs to console (default: true)
+      ignoreSsl: true, // option: set to false to disable working with http links (default: false)
+    ),
+    TransactionController.loadCredentials(),
+    flutterLocalNotificationsPlugin.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/launcher_icon'),
+        iOS: IOSInitializationSettings(
+          defaultPresentAlert: true,
+        ),
       ),
     ),
-  );
+  ]);
+
   // await flutterLocalNotificationsPlugin
   //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
   //     ?.createNotificationChannel(channel);
@@ -115,8 +113,7 @@ class MyApp extends StatelessWidget {
           textTheme: myTexTheme,
           tabBarTheme: TabBarTheme(
             indicator: UnderlineTabIndicator(
-              borderSide:
-                  BorderSide(width: 4.0, color: getColor(context).tertiary),
+              borderSide: BorderSide(width: 4.0, color: getColor(context).tertiary),
             ),
           ),
           bottomNavigationBarTheme: BottomNavigationBarThemeData(

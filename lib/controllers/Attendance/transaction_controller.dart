@@ -1,19 +1,32 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
 
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'package:saint_schoolparent_pro/firebase.dart';
 
 import '../../models/Attendance/transaction.dart';
 import 'package:http/http.dart' as http;
 
-const USERNAME = 'govin';
-const PASSWORD = 'Govin1040@';
-const HOST = 'http://waxton.dvrdns.org:80';
+String USERNAME = 'admin';
+String PASSWORD = 'Admin1040@';
+String HOST = 'http://f0270f046de7.sn.mynetname.net:81';
 
 class TransactionController {
   static String token = '';
+
+  static Future<void> loadCredentials() {
+    return firestore.collection('dashboard').doc('configuration').get().then((value) {
+      var config = value.data();
+      print(config);
+      if (config != null) {
+        USERNAME = config['USERNAME'];
+        PASSWORD = config['PASSWORD'];
+        HOST = config['HOST'];
+      }
+    });
+  }
 
   static Future<void> loadToken() async {
     // var calable = functions.httpsCallable('loadToken');
@@ -23,6 +36,7 @@ class TransactionController {
     // });
 
     var headers = {'content-type': 'application/json'};
+    print("=>  HOST : $HOST");
     var request = http.Request('POST', Uri.parse('$HOST/jwt-api-token-auth/'));
     request.body = json.encode({"username": USERNAME, "password": PASSWORD});
     request.headers.addAll(headers);
