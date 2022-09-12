@@ -1,9 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:saint_schoolparent_pro/models/notification.dart';
-import 'package:saint_schoolparent_pro/theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationList extends StatefulWidget {
@@ -16,7 +13,11 @@ class NotificationList extends StatefulWidget {
 class _NotificationListState extends State<NotificationList> {
   Future<List<NotificationLog>> loadData() async {
     return SharedPreferences.getInstance().then((value) {
-      return value.getKeys().map((e) => NotificationLog.fromStringList(value.getStringList(e)!, e)).toList();
+      return value
+          .getKeys()
+          .map(
+              (e) => NotificationLog.fromStringList(value.getStringList(e)!, e))
+          .toList();
     });
   }
 
@@ -87,7 +88,8 @@ class _NotificationListState extends State<NotificationList> {
                       child: ListTile(
                         title: Text(notification.title),
                         subtitle: Text(notification.description),
-                        trailing: Text(DateFormat.MMMd().format(notification.time)),
+                        trailing:
+                            Text(DateFormat.MMMd().format(notification.time)),
                         leading: const Icon(Icons.notifications),
                       ),
                     );
