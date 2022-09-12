@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -45,13 +44,13 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     } catch (e) {
       print(e.toString());
     }
-    await flutterLocalNotificationsPlugin.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
-        NotificationDetails(
-          android: androidNotificationDetails,
-        ));
+    // await flutterLocalNotificationsPlugin.show(
+    //     notification.hashCode,
+    //     notification.title,
+    //     notification.body,
+    //     NotificationDetails(
+    //       android: androidNotificationDetails,
+    //     ));
   }
 }
 

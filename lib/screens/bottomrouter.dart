@@ -94,6 +94,7 @@ class _BottomRouterState extends State<BottomRouter> {
 
   Future<void> loadDataToLocal(RemoteMessage message) async {
     RemoteNotification? notification = message.notification;
+    // AndroidNotification? android = message.notification?.android;RemoteNotification? notification = message.notification;
     // AndroidNotification? android = message.notification?.android;
     print("Load Data TO LOCAL Loaded");
     if (notification != null) {
@@ -108,8 +109,7 @@ class _BottomRouterState extends State<BottomRouter> {
             title: notification.title ?? '',
             time: DateTime.now(),
             route: message.data['route'] ?? '');
-        var result = prefs.setStringList(
-            message.messageId!, notificationLog.toStringList());
+        var result = prefs.setStringList(message.messageId!, notificationLog.toStringList());
         if (kDebugMode) {
           print(result);
         }
@@ -134,6 +134,21 @@ class _BottomRouterState extends State<BottomRouter> {
   }
 
   Future<void> loadFirebaseMessaging() async {
+    FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        if (message.data['route'] != null) {
+          if (message.data['route'] == 'POSTS') {
+            Get.to(const PostList());
+            return;
+          }
+          if (message.data['route'] == 'APPOINTMENTS') {
+            Get.to(const AppointmentList());
+            return;
+          }
+        }
+        Get.to(const NotificationList());
+      }
+    });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       loadDataToLocal(message).then((val) {
         if (message.data['route'] != null) {
@@ -149,13 +164,10 @@ class _BottomRouterState extends State<BottomRouter> {
         Get.to(const NotificationList());
       });
     });
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(alert: true, sound: true);
+    await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: true, sound: true);
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       loadDataToLocal(message).then((value) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content:
-                Text(message.notification?.title ?? 'Notification Received.')));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message.notification?.title ?? 'Notification Received.')));
       }).catchError((error) => print(error.toString()));
     });
   }
