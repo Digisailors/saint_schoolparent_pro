@@ -33,7 +33,7 @@ class QueueListController extends GetxController {
   }
 
   listenQueue() {
-    queueRef.where('student.ic', whereIn: sessionController.parent!.children).snapshots().listen((event) {
+    queueRef.where('student.icNumber', whereIn: sessionController.parent!.children).snapshots().listen((event) {
       for (var change in event.docChanges) {
         switch (change.type) {
           case DocumentChangeType.added:

@@ -22,6 +22,7 @@ class Student extends Bio {
     String? secondaryPhone,
     String? state,
     String? fcm,
+    required this.docId,
   }) : super(
           fcm: fcm,
           name: name,
@@ -43,6 +44,7 @@ class Student extends Bio {
   String studentClass;
   String section;
 
+  String docId;
   Parent? father;
   Parent? mother;
   Parent? guardian;
@@ -63,7 +65,8 @@ class Student extends Bio {
 
   Bio get bio => this;
   factory Student.fromJson(Map<String, dynamic> json) => Student(
-        icNumber: json["ic"],
+        docId: json["docId"],
+        icNumber: json["icNumber"],
         name: json["name"],
         email: json["email"] ?? '',
         gender: json["gender"] == null ? Gender.male : Gender.values.elementAt(json["gender"]),
@@ -86,7 +89,8 @@ class Student extends Bio {
       );
 
   Map<String, dynamic> toJson() => {
-        "ic": icNumber,
+        "docId": docId,
+        "icNumber": icNumber,
         "name": name,
         "email": email,
         "gender": gender.index,

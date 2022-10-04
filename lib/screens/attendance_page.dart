@@ -97,7 +97,7 @@ class _StudentAttendnaceState extends State<StudentAttendnace> {
         Expanded(child: SingleChildScrollView(
           child: Builder(builder: (context) {
             Map<String, dynamic> mapParams = {
-              'empCode': widget.student.icNumber,
+              'empCode': widget.student.docId,
               'startTime': fromDate,
               'endTime': toDate,
             };

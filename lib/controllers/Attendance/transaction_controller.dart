@@ -52,23 +52,15 @@ class TransactionController {
   }
 
   static bool isSameDay(DateTime? dateA, DateTime? dateB) {
-    return dateA?.year == dateB?.year &&
-        dateA?.month == dateB?.month &&
-        dateA?.day == dateB?.day;
+    return dateA?.year == dateB?.year && dateA?.month == dateB?.month && dateA?.day == dateB?.day;
   }
 
-  static Future<List<StudentAttendanceByDate>> getTransactions(
-      Map<String, dynamic> map) {
-    return loadTransactions(
-        startTime: map['startTime'],
-        endTime: map['endTime'],
-        empCode: map['empCode']);
+  static Future<List<StudentAttendanceByDate>> getTransactions(Map<String, dynamic> map) {
+    return loadTransactions(startTime: map['startTime'], endTime: map['endTime'], empCode: map['empCode']);
   }
 
   static Future<List<StudentAttendanceByDate>> loadTransactions(
-      {required DateTime startTime,
-      required DateTime endTime,
-      required String empCode}) async {
+      {required DateTime startTime, required DateTime endTime, required String empCode}) async {
     List<StudentAttendanceByDate> transactionLogs = [];
     endTime = endTime.add(const Duration(days: 1));
     Map<String, dynamic> maplogs;
@@ -82,8 +74,7 @@ class TransactionController {
       var unParsedLogs = body['data'];
       if (unParsedLogs is List) {
         // var unParsedLogs = body['data'];
-        List<TransactionLog> logs =
-            unParsedLogs.map((e) => TransactionLog.fromJson(e)).toList();
+        List<TransactionLog> logs = unParsedLogs.map((e) => TransactionLog.fromJson(e)).toList();
         var diffInDays = endTime.difference(startTime).inDays;
         for (int i = 0; i < diffInDays; i++) {
           var date = startTime.add(Duration(days: i));
@@ -93,8 +84,7 @@ class TransactionController {
           // bool cafeteria = false;
           var tempLogs;
           try {
-            tempLogs =
-                logs.where((element) => element.punchDate == date).toList();
+            tempLogs = logs.where((element) => element.punchDate == date).toList();
           } catch (e) {
             print(e.toString());
           }
@@ -117,10 +107,7 @@ class TransactionController {
               }
             }
           }
-          transactionLogs.add(StudentAttendanceByDate(
-              date: date,
-              checkInTime: checkInTime,
-              checkOutTime: checkOutTime));
+          transactionLogs.add(StudentAttendanceByDate(date: date, checkInTime: checkInTime, checkOutTime: checkOutTime));
         }
       }
       print(body);

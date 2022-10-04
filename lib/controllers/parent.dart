@@ -30,7 +30,7 @@ class ParentController extends GetxController {
   }
 
   static Future<bool> verifyChild(String child) {
-    return students.where('parent', arrayContains: parent.icNumber).get().then((value) {
+    return students.where('parents', arrayContains: parent.icNumber).get().then((value) {
       if (value.docs.isNotEmpty) {
         var childrenIcs = value.docs.map((e) => Student.fromJson(e.data()).icNumber).toList();
         if (childrenIcs.contains(child)) {
