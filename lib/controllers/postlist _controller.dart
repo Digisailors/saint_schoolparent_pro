@@ -7,8 +7,11 @@ import 'package:saint_schoolparent_pro/models/post.dart';
 class PostListController extends GetxController {
   static PostListController instance = Get.find();
 
-  List<Post> posts = [];
+  List<Post> generalPosts = [];
   List<Post> personalPosts = [];
+  List<Post> parentPosts = [];
+
+  List<Post> posts = [];
 
   @override
   void onInit() {
@@ -18,7 +21,16 @@ class PostListController extends GetxController {
 
   listenPosts() {
     postsRef.orderBy('date', descending: true).snapshots().listen((event) {
-      posts = event.docs.map((e) => Post.fromJson(e.data(), e.id)).toList();
+      generalPosts = event.docs.map((e) => Post.fromJson(e.data(), e.id)).toList();
+      posts = generalPosts + parentPosts;
+      posts.sort((a, b) => b.date.compareTo(a.date));
+      update();
+    });
+
+    parentsPostsRef.orderBy('date', descending: true).snapshots().listen((event) {
+      parentPosts = event.docs.map((e) => Post.fromJson(e.data(), e.id)).toList();
+      posts = generalPosts + parentPosts;
+      posts.sort((a, b) => b.date.compareTo(a.date));
       update();
     });
 
@@ -89,6 +101,7 @@ class PostListController extends GetxController {
     return array;
   }
 
+  final Query<Map<String, dynamic>> parentsPostsRef = firestore.collection('posts').where('audience', isEqualTo: 2);
   final Query<Map<String, dynamic>> postsRef = firestore.collection('posts').where('audience', isEqualTo: Audience.all.index);
   Query<Map<String, dynamic>> get myPosts =>
       firestore.collection('posts').where('audience', isEqualTo: Audience.single.index).where('sentTo.icNumber', whereIn: searchElement);
