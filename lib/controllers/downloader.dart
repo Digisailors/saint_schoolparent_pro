@@ -24,7 +24,7 @@ class Downloader {
     }
   }
 
-  static Future<Result> downloadFile(String url, String fileName, String dir) async {
+  static Future<Result> downloadFile(String url, String fileName) async {
     HttpClient httpClient = HttpClient();
     File file;
     String filePath = '';
@@ -37,17 +37,17 @@ class Downloader {
       if (response.statusCode == 200) {
         var bytes = await consolidateHttpClientResponseBytes(response);
 
-        filePath = '$dir/$fileName';
-        file = File(filePath);
+        filePath = (Platform.isAndroid ? Directory("/storage/emulated/0/Download") : await path.getApplicationDocumentsDirectory()).path;
+        file = File('$filePath/$fileName');
         await file.writeAsBytes(bytes);
         return Result.success("File Downloadeed successfully");
       } else {
         filePath = 'Error code:${response.statusCode}';
-        return Result.error("Unknown error occured, ${filePath.toString()}");
+        return Result.error("Unknown error occurred, ${filePath.toString()}");
       }
     } catch (ex) {
       print(ex.toString());
-      return Result.error("Unknown error occured, ${ex.toString()}");
+      return Result.error("Unknown error occurred, ${ex.toString()}");
     }
   }
 }
