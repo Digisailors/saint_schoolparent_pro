@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:saint_schoolparent_pro/controllers/parent.dart';
-import 'package:saint_schoolparent_pro/controllers/postlist%20_controller.dart';
+
 import 'package:saint_schoolparent_pro/main.dart';
 import 'package:saint_schoolparent_pro/models/parent.dart';
 import 'package:saint_schoolparent_pro/screens/announcements.dart';
@@ -33,7 +33,7 @@ class _BottomRouterState extends State<BottomRouter> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomePage(),
     const AppointmentList(),
-    const PostList(),
+    PostList(),
     const NotificationList(),
   ];
 
@@ -57,7 +57,6 @@ class _BottomRouterState extends State<BottomRouter> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(PostListController());
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -104,6 +103,7 @@ class _BottomRouterState extends State<BottomRouter> {
         });
 
         var notificationLog = NotificationLog(
+            documentPath: message.data['reference'],
             messageId: DateTime.now().millisecondsSinceEpoch.toString(),
             description: notification.body ?? message.data['body'],
             title: notification.title ?? '',
@@ -136,9 +136,10 @@ class _BottomRouterState extends State<BottomRouter> {
   Future<void> loadFirebaseMessaging() async {
     FirebaseMessaging.instance.getInitialMessage().then((RemoteMessage? message) {
       if (message != null) {
+        loadDataToLocal(message);
         if (message.data['route'] != null) {
           if (message.data['route'] == 'POSTS') {
-            Get.to(const PostList());
+            Get.to(PostList());
             return;
           }
           if (message.data['route'] == 'APPOINTMENTS') {
@@ -153,7 +154,7 @@ class _BottomRouterState extends State<BottomRouter> {
       loadDataToLocal(message).then((val) {
         if (message.data['route'] != null) {
           if (message.data['route'] == 'POSTS') {
-            Get.to(const PostList());
+            Get.to(PostList());
             return;
           }
           if (message.data['route'] == 'APPOINTMENTS') {

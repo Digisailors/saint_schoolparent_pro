@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:saint_schoolparent_pro/firebase.dart';
 import 'package:saint_schoolparent_pro/models/notification.dart';
+import 'package:saint_schoolparent_pro/models/post.dart';
+import 'package:saint_schoolparent_pro/screens/announcements.dart';
+import 'package:saint_schoolparent_pro/screens/appointmentlist.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationList extends StatefulWidget {
@@ -13,11 +18,7 @@ class NotificationList extends StatefulWidget {
 class _NotificationListState extends State<NotificationList> {
   Future<List<NotificationLog>> loadData() async {
     return SharedPreferences.getInstance().then((value) {
-      return value
-          .getKeys()
-          .map(
-              (e) => NotificationLog.fromStringList(value.getStringList(e)!, e))
-          .toList();
+      return value.getKeys().map((e) => NotificationLog.fromStringList(value.getStringList(e)!, e)).toList();
     });
   }
 
@@ -26,7 +27,8 @@ class _NotificationListState extends State<NotificationList> {
     super.initState();
     loadData().then((value) {
       setState(() {
-        logs = value;
+        logs = value.toList();
+        logs.sort((a, b) => b.time.compareTo(a.time));
       });
     });
   }
@@ -88,9 +90,45 @@ class _NotificationListState extends State<NotificationList> {
                       child: ListTile(
                         title: Text(notification.title),
                         subtitle: Text(notification.description),
-                        trailing:
-                            Text(DateFormat.MMMd().format(notification.time)),
+                        trailing: Text(DateFormat.MMMd().format(notification.time)),
                         leading: const Icon(Icons.notifications),
+                        onTap: () async {
+                          if (notification.route != null) {
+                            if (notification.route != null) {
+                              if (notification.route == 'POSTS') {
+                                if (notification.documentPath != null) {
+                                  var post = await firestore.doc(notification.documentPath!).get().then((value) {
+                                    if (value.exists) {
+                                      return Post.fromJson(value.data(), value.id);
+                                    } else {
+                                      return null;
+                                    }
+                                  });
+                                  if (post != null) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Scaffold(
+                                            appBar: AppBar(
+                                              title: Text(post.audience == Audience.single ? "MESSAGE" : "ANNOUNCEMENT"),
+                                            ),
+                                            body: SingleChildScrollView(child: PostTile(post: post)),
+                                          );
+                                        });
+                                  }
+                                } else {
+                                  Get.to(PostList());
+                                }
+
+                                return;
+                              }
+                              if (notification.route == 'APPOINTMENTS') {
+                                Get.to(const AppointmentList());
+                                return;
+                              }
+                            }
+                          }
+                        },
                       ),
                     );
                   })),

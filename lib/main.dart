@@ -1,9 +1,7 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +16,7 @@ import 'package:saint_schoolparent_pro/firebase_options.dart';
 import 'package:saint_schoolparent_pro/landing_page.dart';
 import 'package:saint_schoolparent_pro/models/notification.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
+import 'package:saint_schoolparent_pro/widgets/splash_screeen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_android/shared_preferences_android.dart';
 import 'package:shared_preferences_ios/shared_preferences_ios.dart';
@@ -34,23 +33,19 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (notification != null) {
     try {
       var prefs = await SharedPreferences.getInstance();
+      print(message.data['reference']);
       var notificationLog = NotificationLog(
-          messageId: DateTime.now().millisecondsSinceEpoch.toString(),
-          description: notification.body ?? '',
-          title: notification.title ?? '',
-          time: DateTime.now(),
-          route: '');
+        documentPath: message.data['reference'],
+        messageId: DateTime.now().millisecondsSinceEpoch.toString(),
+        description: notification.body ?? '',
+        title: notification.title ?? '',
+        time: DateTime.now(),
+        route: message.data['route'],
+      );
       prefs.setStringList(message.messageId!, notificationLog.toStringList());
     } catch (e) {
       print(e.toString());
     }
-    // await flutterLocalNotificationsPlugin.show(
-    //     notification.hashCode,
-    //     notification.title,
-    //     notification.body,
-    //     NotificationDetails(
-    //       android: androidNotificationDetails,
-    //     ));
   }
 }
 
@@ -69,33 +64,39 @@ AndroidNotificationDetails androidNotificationDetails = AndroidNotificationDetai
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Future.wait([
-    FlutterDownloader.initialize(
-      debug: true, // optional: set to false to disable printing logs to console (default: true)
-      ignoreSsl: true, // option: set to false to disable working with http links (default: false)
-    ),
-    TransactionController.loadCredentials(),
-    flutterLocalNotificationsPlugin.initialize(
-      const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/launcher_icon'),
-        iOS: IOSInitializationSettings(
-          defaultPresentAlert: true,
+Future getInitializingFutures() {
+  return Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform).then((value) {
+    Get.put(AuthController());
+    Get.put(SessionController());
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    var futures = [
+      TransactionController.loadCredentials(),
+      flutterLocalNotificationsPlugin.initialize(
+        const InitializationSettings(
+          android: AndroidInitializationSettings('@mipmap/launcher_icon'),
+          iOS: IOSInitializationSettings(
+            defaultPresentAlert: true,
+          ),
         ),
       ),
-    ),
-  ]);
+    ];
+    if (!FlutterDownloader.initialized) {
+      futures.add(FlutterDownloader.initialize(
+        debug: true, // optional: set to false to disable printing logs to console (default: true)
+        ignoreSsl: true, // option: set to false to disable working with http links (default: false)
+      ));
+    }
+    return Future.wait(futures);
+  });
+}
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
   // await flutterLocalNotificationsPlugin
   //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
   //     ?.createNotificationChannel(channel);
 
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-  Get.put(AuthController());
-  Get.put(SessionController());
   runApp(const MyApp());
 }
 
@@ -139,6 +140,7 @@ class MyApp extends StatelessWidget {
         //   );
         // },
         home: AnimatedSplashScreen(
+          future: getInitializingFutures(),
           splashIconSize: 250,
           nextScreen: const LandingPage(),
           splash: Image.asset(

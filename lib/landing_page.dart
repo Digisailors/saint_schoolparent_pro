@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:saint_schoolparent_pro/controllers/auth.dart';
 import 'package:saint_schoolparent_pro/controllers/parent.dart';
-import 'package:saint_schoolparent_pro/controllers/postlist%20_controller.dart';
+
 import 'package:saint_schoolparent_pro/controllers/session.dart';
 import 'package:saint_schoolparent_pro/firebase.dart';
 import 'package:saint_schoolparent_pro/models/parent.dart';
@@ -28,7 +28,6 @@ class LandingPage extends StatelessWidget {
               builder: (BuildContext context, AsyncSnapshot<Parent?> snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
-                    Get.put(() => PostListController());
                     Parent parent = snapshot.data!;
                     sessionController.session.parent = parent;
                     messaging.getToken().then((val) {
