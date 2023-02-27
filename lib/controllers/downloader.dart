@@ -10,7 +10,9 @@ import 'package:url_launcher/url_launcher.dart';
 class Downloader {
   static Future<String?> requestDownload(String url, String name) async {
     String? taskId;
-    final saveDir = Platform.isAndroid ? Directory("/storage/emulated/0/Download") : await path.getApplicationDocumentsDirectory();
+    final saveDir = Platform.isAndroid
+        ? Directory("/storage/emulated/0/Download")
+        : await path.getApplicationDocumentsDirectory();
     return saveDir.create().then((value) async {
       bool isDuplicate;
       do {
@@ -22,7 +24,12 @@ class Downloader {
       } while (isDuplicate);
 
       taskId = await FlutterDownloader.enqueue(
-          url: url, fileName: name, savedDir: saveDir.path, openFileFromNotification: true, showNotification: true, saveInPublicStorage: true);
+          url: url,
+          fileName: name,
+          savedDir: saveDir.path,
+          openFileFromNotification: true,
+          showNotification: true,
+          saveInPublicStorage: true);
       return taskId;
     });
   }
@@ -38,7 +45,9 @@ class Downloader {
     File file;
     String filePath = '';
     String myUrl = '';
-    final saveDir = Platform.isAndroid ? Directory("/storage/emulated/0/Download") : await path.getApplicationDocumentsDirectory();
+    final saveDir = Platform.isAndroid
+        ? Directory("/storage/emulated/0/Download")
+        : await path.getApplicationDocumentsDirectory();
 
     try {
       myUrl = '$url/$fileName';
@@ -47,7 +56,10 @@ class Downloader {
       if (response.statusCode == 200) {
         var bytes = await consolidateHttpClientResponseBytes(response);
 
-        filePath = (Platform.isAndroid ? Directory("/storage/emulated/0/Download") : await path.getApplicationDocumentsDirectory()).path;
+        filePath = (Platform.isAndroid
+                ? Directory("/storage/emulated/0/Download")
+                : await path.getApplicationDocumentsDirectory())
+            .path;
         file = File('$filePath/$fileName');
         await file.writeAsBytes(bytes);
         return Result.success("File Downloaded successfully");
