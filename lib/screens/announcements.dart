@@ -12,7 +12,6 @@ import 'package:saint_schoolparent_pro/controllers/downloader.dart';
 
 import 'package:saint_schoolparent_pro/controllers/session.dart';
 import 'package:saint_schoolparent_pro/models/helper%20models/download_task.dart';
-import 'package:saint_schoolparent_pro/models/result.dart';
 import 'package:saint_schoolparent_pro/theme.dart';
 
 import '../firebase.dart';
@@ -54,6 +53,7 @@ class PostList extends StatelessWidget {
               ),
               FirestoreListView(
                 cacheExtent: 10,
+
                 query: postsRef.orderBy('date', descending: true),
                 itemBuilder: (BuildContext context, QueryDocumentSnapshot<Map<String, dynamic>> doc) {
                   var post = Post.fromJson(doc.data(), doc.id);
@@ -165,11 +165,12 @@ class _PostTileState extends State<PostTile> {
 
                               for (var element in widget.post.attachments) {
                                 futures.add(
+                                  Platform.isAndroid ?
                                   Downloader.requestDownload(element.url, element.name).then((value) {
                                     if (value != null) {
                                       taskId.add(TaskDownload(id: value, progress: 0, status: DownloadTaskStatus.enqueued));
                                     }
-                                  }),
+                                  }) : Downloader.downloadFile(element.url, element.name),
                                 );
                               }
 
@@ -177,6 +178,7 @@ class _PostTileState extends State<PostTile> {
                                 if (results.where((element) => element.code == 'Error').isEmpty) {
                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("The files are downloaded")));
                                 } else {
+
                                   ScaffoldMessenger.of(context)
                                       .showSnackBar(const SnackBar(content: Text("Error occured, Files may not be downloaded")));
                                 }
