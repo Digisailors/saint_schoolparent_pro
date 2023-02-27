@@ -12,6 +12,15 @@ class Downloader {
     String? taskId;
     final saveDir = Platform.isAndroid ? Directory("/storage/emulated/0/Download") : await path.getApplicationDocumentsDirectory();
     return saveDir.create().then((value) async {
+      bool isDuplicate;
+      do {
+        File _file = File("${saveDir.path}${Platform.pathSeparator}$name");
+        isDuplicate = _file.existsSync();
+        if (isDuplicate) {
+          name = "$name(1)";
+        }
+      } while (isDuplicate);
+
       taskId = await FlutterDownloader.enqueue(
           url: url, fileName: name, savedDir: saveDir.path, openFileFromNotification: true, showNotification: true, saveInPublicStorage: true);
       return taskId;
@@ -41,7 +50,7 @@ class Downloader {
         filePath = (Platform.isAndroid ? Directory("/storage/emulated/0/Download") : await path.getApplicationDocumentsDirectory()).path;
         file = File('$filePath/$fileName');
         await file.writeAsBytes(bytes);
-        return Result.success("File Downloadeed successfully");
+        return Result.success("File Downloaded successfully");
       } else {
         filePath = 'Error code:${response.statusCode}';
         return Result.error("Unknown error occurred, ${filePath.toString()}");
