@@ -24,11 +24,12 @@ class Downloader {
     }
   }
 
-  static Future<Result> downloadFile(String url, String fileName, String dir) async {
+  static Future<Result> downloadFile(String url, String fileName) async {
     HttpClient httpClient = HttpClient();
     File file;
     String filePath = '';
     String myUrl = '';
+    final saveDir = Platform.isAndroid ? Directory("/storage/emulated/0/Download") : await path.getApplicationDocumentsDirectory();
 
     try {
       myUrl = '$url/$fileName';
@@ -37,7 +38,7 @@ class Downloader {
       if (response.statusCode == 200) {
         var bytes = await consolidateHttpClientResponseBytes(response);
 
-        filePath = '$dir/$fileName';
+        filePath = '$saveDir/$fileName';
         file = File(filePath);
         await file.writeAsBytes(bytes);
         return Result.success("File Downloadeed successfully");

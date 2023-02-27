@@ -74,7 +74,7 @@ Future getInitializingFutures() {
       flutterLocalNotificationsPlugin.initialize(
         const InitializationSettings(
           android: AndroidInitializationSettings('@mipmap/launcher_icon'),
-          iOS: IOSInitializationSettings(
+          iOS: DarwinInitializationSettings(
             defaultPresentAlert: true,
           ),
         ),
