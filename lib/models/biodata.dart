@@ -58,6 +58,8 @@ class Bio {
     return text;
   }
 
+  String get nonHyphenIcNumber => icNumber.replaceAll('-', '');
+
   factory Bio.fromBioJson(json) => Bio(
         fcm: json["fcm"],
         name: json["name"] ?? '',
@@ -81,6 +83,7 @@ class Bio {
         "lastName": lastName,
         "entityType": entityType.index,
         "icNumber": icNumber,
+        "nonHyphenIcNumber": nonHyphenIcNumber,
         "email": email,
         "address": address,
         "addressLine1": addressLine1,

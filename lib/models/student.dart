@@ -105,6 +105,7 @@ class Student extends Bio {
         'secondaryPhone': secondaryPhone,
         "state": state,
         "search": search,
+        "nonHyphenIcNumber": nonHyphenIcNumber,
         //------------
         "father": father?.toJson(),
         "mother": mother?.toJson(),
