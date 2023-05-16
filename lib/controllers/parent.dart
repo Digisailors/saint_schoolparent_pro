@@ -75,7 +75,8 @@ class ParentController extends GetxController {
   }
 
   static Future<Parent> getParent(String icNumber) {
-    return parents.doc(icNumber).get().then((value) => Parent.fromJson(value.data()!));
+    var trimmedicNumber = icNumber.replaceAll(" ", "").replaceAll("-", "");
+    return parents.where("nonHyphenIcNumber", isEqualTo: trimmedicNumber).limit(1).get().then((value) => Parent.fromJson(value.docs.first.data()));
   }
 
   static addParent(Parent parentData) {
