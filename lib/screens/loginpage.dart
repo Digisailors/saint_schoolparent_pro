@@ -152,7 +152,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Logging in got first time?',
+                    'Logging in for the first time?',
                     style: getText(context).button,
                   ),
                   TextButton(

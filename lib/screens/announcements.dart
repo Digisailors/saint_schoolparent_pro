@@ -25,13 +25,10 @@ class PostList extends StatelessWidget {
 
   // final usersQuery = FirebaseFirestore.instance.collection('users').orderBy('name');
 
-  final Query<Map<String, dynamic>> parentsPostsRef = firestore
-      .collection('posts')
-      .where('audience', whereIn: [Audience.all.index, Audience.parents.index]);
-  final Query<Map<String, dynamic>> postsRef = firestore
-      .collection('posts')
-      .where('sentTo.icNumber',
-          isEqualTo: sessionController.session.parent?.icNumber);
+  final Query<Map<String, dynamic>> parentsPostsRef =
+      firestore.collection('posts').where('audience', whereIn: [Audience.all.index, Audience.parents.index]);
+  final Query<Map<String, dynamic>> postsRef =
+      firestore.collection('posts').where('sentTo.icNumber', isEqualTo: sessionController.session.parent?.icNumber);
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +39,7 @@ class PostList extends StatelessWidget {
           appBar: AppBar(
             centerTitle: true,
             title: const Text('Alerts'),
-            bottom: const TabBar(tabs: [
-              Tab(text: 'General Announcement'),
-              Tab(text: 'Messages')
-            ]),
+            bottom: const TabBar(tabs: [Tab(text: 'General Announcement'), Tab(text: 'Messages')]),
           ),
           body: TabBarView(
             children: [
@@ -53,8 +47,7 @@ class PostList extends StatelessWidget {
               FirestoreListView(
                 cacheExtent: 10,
                 query: parentsPostsRef.orderBy('date', descending: true),
-                itemBuilder: (BuildContext context,
-                    QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+                itemBuilder: (BuildContext context, QueryDocumentSnapshot<Map<String, dynamic>> doc) {
                   var post = Post.fromJson(doc.data(), doc.id);
                   return PostTile(post: post);
                 },
@@ -62,8 +55,7 @@ class PostList extends StatelessWidget {
               FirestoreListView(
                 cacheExtent: 10,
                 query: postsRef.orderBy('date', descending: true),
-                itemBuilder: (BuildContext context,
-                    QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+                itemBuilder: (BuildContext context, QueryDocumentSnapshot<Map<String, dynamic>> doc) {
                   var post = Post.fromJson(doc.data(), doc.id);
                   return PostTile(post: post);
                 },
@@ -88,8 +80,7 @@ class _PostTileState extends State<PostTile> {
   void initState() {
     super.initState();
     FlutterDownloader.registerCallback(downloadCallback);
-    IsolateNameServer.registerPortWithName(
-        _port.sendPort, 'downloader_send_port');
+    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
     _port.listen((downloadData) {
       if (downloadData is TaskDownload) {
         for (int i = 0; i < taskId.length; i++) {
@@ -113,14 +104,12 @@ class _PostTileState extends State<PostTile> {
   final ReceivePort _port = ReceivePort();
 
   @pragma('vm:entry-point')
-  static void downloadCallback(
-      String id, DownloadTaskStatus status, int progress) {
+  static void downloadCallback(String id, int status, int progress) {
     if (kDebugMode) {
       print('Task => ($id) ($status) ($progress)');
     }
-    final SendPort send =
-        IsolateNameServer.lookupPortByName('downloader_send_port')!;
-    send.send(TaskDownload(id: id, status: status, progress: progress));
+    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port')!;
+    send.send(TaskDownload(id: id, status: DownloadTaskStatus(status), progress: progress));
   }
 
   List<TaskDownload> taskId = [];
@@ -177,37 +166,23 @@ class _PostTileState extends State<PostTile> {
                               for (var element in widget.post.attachments) {
                                 futures.add(
                                   Platform.isAndroid
-                                      ? Downloader.requestDownload(
-                                              element.url, element.name)
-                                          .then((value) {
+                                      ? Downloader.requestDownload(element.url, element.name).then((value) {
                                           if (value != null) {
-                                            taskId.add(TaskDownload(
-                                                id: value,
-                                                progress: 0,
-                                                status: DownloadTaskStatus
-                                                    .enqueued));
-                                            return Result.success(
-                                                "Task enqueud");
+                                            taskId.add(TaskDownload(id: value, progress: 0, status: DownloadTaskStatus.enqueued));
+                                            return Result.success("Task enqueud");
                                           }
                                         })
-                                      : Downloader.downloadFile(
-                                          element.url, element.name),
+                                      : Downloader.downloadFile(element.url, element.name),
                                 );
                               }
 
                               Future.wait(futures).then((results) {
-                                if (results
-                                    .where((element) => element.code == 'Error')
-                                    .isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              "The files will be downloaded. Please check notifications")));
+                                if (results.where((element) => element.code == 'Error').isEmpty) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(content: Text("The files will be downloaded. Please check notifications")));
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                          content: Text(
-                                              "Error occured, Files may not be downloaded")));
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(const SnackBar(content: Text("Error occured, Files may not be downloaded")));
                                 }
                               });
                             },
@@ -230,8 +205,7 @@ class _PostTileState extends State<PostTile> {
       if (task.status == DownloadTaskStatus.enqueued) {
         returnItems.add(const LinearProgressIndicator());
       } else if (task.status == DownloadTaskStatus.failed) {
-        returnItems
-            .add(const LinearProgressIndicator(color: Colors.red, value: 1));
+        returnItems.add(const LinearProgressIndicator(color: Colors.red, value: 1));
       } else if (task.status == DownloadTaskStatus.complete) {
         returnItems.add(Container());
       } else if (task.status == DownloadTaskStatus.running) {
