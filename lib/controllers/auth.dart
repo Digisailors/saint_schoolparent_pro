@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:saint_schoolparent_pro/controllers/session.dart';
 
+
 class AuthController extends GetxController {
   static AuthController instance = Get.find();
   final _firebaseAuth = FirebaseAuth.instance;
